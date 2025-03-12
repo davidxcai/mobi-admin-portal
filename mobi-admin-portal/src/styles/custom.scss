@@ -1,0 +1,9 @@
+@import "bootstrap/scss/bootstrap";
+@import "./colors.scss";
+@import "./buttons.scss";
+
+// Apply colors to body
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}

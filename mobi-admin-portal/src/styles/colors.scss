@@ -1,0 +1,50 @@
+// ✅ Define custom light mode colors
+$primary-light: #007bff;
+$secondary-light: #6c757d;
+$success-light: #28a745;
+$danger-light: #dc3545;
+$warning-light: #ffc107;
+$info-light: #17a2b8;
+$light-light: #f8f9fa;
+$dark-light: #343a40;
+$bg-light: #ffffff;
+$text-light: #000000;
+
+// ✅ Define custom dark mode colors
+$primary-dark: #ff9800;
+$secondary-dark: #b0bec5;
+$success-dark: #00c853;
+$danger-dark: #d32f2f;
+$warning-dark: #ffb300;
+$info-dark: #03a9f4;
+$light-dark: #424242;
+$dark-dark: #121212;
+$bg-dark: #1a1a1a;
+$text-dark: #ffffff;
+
+// ✅ Apply global variables using CSS custom properties
+:root {
+  --primary-color: #{$primary-light};
+  --secondary-color: #{$secondary-light};
+  --success-color: #{$success-light};
+  --danger-color: #{$danger-light};
+  --warning-color: #{$warning-light};
+  --info-color: #{$info-light};
+  --light-color: #{$light-light};
+  --dark-color: #{$dark-light};
+  --bg-color: #{$bg-light};
+  --text-color: #{$text-light};
+
+  @media (prefers-color-scheme: dark) {
+    --primary-color: #{$primary-dark};
+    --secondary-color: #{$secondary-dark};
+    --success-color: #{$success-dark};
+    --danger-color: #{$danger-dark};
+    --warning-color: #{$warning-dark};
+    --info-color: #{$info-dark};
+    --light-color: #{$light-dark};
+    --dark-color: #{$dark-dark};
+    --bg-color: #{$bg-dark};
+    --text-color: #{$text-dark};
+  }
+}
