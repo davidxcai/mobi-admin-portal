@@ -5,12 +5,17 @@
 // Actions -> functions that call the reducers
 
 import { configureStore } from "@reduxjs/toolkit";
-import authReducer from "./slices/authSlice";
+import { authReducer } from "./slices/authSlice";
+import { uiReducer } from "./slices/uiSlice";
+import { eventsReducer } from "./slices/eventsSlice";
+import { currentEventReducer } from "./slices/currentEventSlice";
 
 export const store = configureStore({
   reducer: {
     auth: authReducer, // state.auth.user, state.auth is right here
-    // add more slices here later
+    ui: uiReducer, // state.ui.darkMode
+    events: eventsReducer, // state.events.events
+    currentEvent: currentEventReducer, // state.currentEvent.currentEvent
   },
 });
 

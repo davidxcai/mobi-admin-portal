@@ -6,4 +6,49 @@
 body {
   background-color: var(--bg-color);
   color: var(--text-color);
+  font-family: "Inter", sans-serif;
+}
+
+.space-grotesk {
+  // <weight>: Use a value from 300 to 700
+  font-family: "Space Grotesk", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.bold {
+  font-weight: 500;
+}
+
+.inter-bold {
+  // <weight>: Use a value from 100 to 900
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 800;
+  font-style: normal;
+}
+
+.custom-input {
+  border: none;
+  border-radius: 0;
+  background-color: transparent !important;
+  border-bottom: 1px solid var(--light-color);
+  color: var(--light-color);
+  padding-top: 0;
+  &:focus {
+    outline: none !important;
+    box-shadow: none !important;
+    border-color: var(--secondary-color) !important;
+    background-color: transparent !important;
+    color: var(--light-color) !important;
+  }
+}
+
+.custom-label {
+  color: var(--light-color);
+}
+
+.custom-label .form-control:not(:placeholder-shown) {
+  background-color: transparent !important;
 }

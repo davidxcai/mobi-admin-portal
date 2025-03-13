@@ -4,12 +4,24 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 // defines the shape of an auth state
 // :string enforces it to always be a string. if a number, typescript will give error
+interface User {
+  username: string;
+  student_id: string;
+  name: {
+    first: string;
+    last: string;
+  };
+  role: string;
+}
+
 interface AuthState {
-  user: string | null; // state.auth.user is a string or null
+  user: User | null; // state.auth.user is a object or null
+  isAuthenticated: boolean;
 }
 
 const initialState: AuthState = {
   user: null, // no user logged in by default
+  isAuthenticated: false,
 };
 
 const authSlice = createSlice({
@@ -18,14 +30,16 @@ const authSlice = createSlice({
   reducers: {
     // action is the object that gets passed when dispatch(login()) is called
     // the paylod (data being sent) must be a string type here
-    login: (state, action: PayloadAction<string>) => {
+    login: (state, action: PayloadAction<User>) => {
       state.user = action.payload; // store the logged in user
+      state.isAuthenticated = true;
     },
     logout: (state) => {
       state.user = null; // clear the logged in user
+      state.isAuthenticated = false;
     },
   },
 });
 
+export const authReducer = authSlice.reducer;
 export const { login, logout } = authSlice.actions;
-export default authSlice.reducer;
