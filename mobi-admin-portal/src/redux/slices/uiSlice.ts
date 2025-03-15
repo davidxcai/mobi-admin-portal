@@ -1,26 +1,17 @@
 // UI settings such as dark mode
 
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ReactNode } from "react"; // imports react node for flexible modal content
 
 interface UiState {
   darkMode: boolean;
   currentPage: string;
-  modal: {
-    isOpen: boolean;
-    title?: string;
-    content?: ReactNode;
-    confirmText?: string;
-    confirmAction?: () => void;
-  };
+  isModalOpen: boolean;
 }
 
 const initialState: UiState = {
   darkMode: false,
-  currentPage: "dashboard",
-  modal: {
-    isOpen: false,
-  },
+  currentPage: "login",
+  isModalOpen: false,
 };
 
 const uiSlice = createSlice({
@@ -33,25 +24,11 @@ const uiSlice = createSlice({
     setCurrentPage: (state, action: PayloadAction<string>) => {
       state.currentPage = action.payload;
     },
-    openModal: (
-      state,
-      action: PayloadAction<{
-        title: string;
-        content: ReactNode;
-        confirmText?: string;
-        confirmAction?: () => void;
-      }>
-    ) => {
-      state.modal = {
-        isOpen: true,
-        title: action.payload.title,
-        content: action.payload.content,
-        confirmText: action.payload.confirmText,
-        confirmAction: action.payload.confirmAction,
-      };
+    openModal: (state) => {
+      state.isModalOpen = true;
     },
     closeModal: (state) => {
-      state.modal.isOpen = false;
+      state.isModalOpen = false;
     },
   },
 });

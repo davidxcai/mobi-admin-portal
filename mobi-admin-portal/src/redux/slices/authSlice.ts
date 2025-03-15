@@ -5,7 +5,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 // defines the shape of an auth state
 // :string enforces it to always be a string. if a number, typescript will give error
 interface User {
-  username: string;
+  username: string | null;
   student_id: string;
   name: {
     first: string;

@@ -1,4 +1,4 @@
-import logo from "../assets/MOBI Logo.svg";
+import logo from "../../assets/MOBI Logo.svg";
 
 function LoginBanner() {
   return (

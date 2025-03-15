@@ -1,10 +1,9 @@
-import useAuth from "../hooks/useAuth";
+import useAuth from "../../hooks/useAuth";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 
 function LoginForm() {
   const { handleLogin } = useAuth();
-
   return (
     <Form className="mw-md">
       <Form.Group className="mb-3" controlId="studentID">

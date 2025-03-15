@@ -52,3 +52,23 @@ body {
 .custom-label .form-control:not(:placeholder-shown) {
   background-color: transparent !important;
 }
+
+.sidebar {
+  background-color: var(--dark-color);
+  width: 240px;
+  transition: width 300ms ease-in-out;
+}
+
+.login-page {
+  width: 50vw;
+}
+
+.sidebar-btn {
+  all: unset;
+  &:hover {
+    background-color: var(--secondary-color);
+  }
+  &.active {
+    background-color: var(--secondary-color);
+  }
+}

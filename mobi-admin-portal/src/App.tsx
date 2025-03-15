@@ -1,9 +1,11 @@
 // import Header from "./components/Header";
-import Login from "./pages/Login";
+import Layout from "./components/Layout";
+import useFetchData from "./hooks/useFetchData";
 import "./App.scss";
 
 function App() {
-  return <Login />;
+  useFetchData();
+  return <Layout />;
 }
 
 export default App;
