@@ -12,6 +12,7 @@ import { uiReducer } from "./slices/uiSlice";
 import { eventsReducer } from "./slices/eventsSlice";
 import { checkinReducer } from "./slices/checkinSlice";
 import { cardswipeReducer } from "./slices/cardswipeSlice";
+import { apiReducer } from "./slices/apiSlice";
 
 export const store = configureStore({
   reducer: {
@@ -20,6 +21,7 @@ export const store = configureStore({
     events: eventsReducer, // state.events.events
     checkin: checkinReducer, // state.checkin.checkin
     cardswipe: cardswipeReducer, // state.cardswipe.buffer
+    api: apiReducer, // state.api.data
   },
 });
 

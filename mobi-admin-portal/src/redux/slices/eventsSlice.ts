@@ -2,11 +2,8 @@ import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 import { eventsData } from "../../development/data";
-import { useDispatch } from "react-redux";
 
 const SERVER_ONLINE = false; // Set to true to use the real API
-
-const dispatch = useDispatch();
 
 // Async Thunk api calls
 export const fetchEvents = createAsyncThunk("events/fetchEvents", async () => {

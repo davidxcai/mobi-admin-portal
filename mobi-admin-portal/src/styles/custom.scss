@@ -57,6 +57,7 @@ body {
   background-color: var(--dark-color);
   width: 240px;
   transition: width 300ms ease-in-out;
+  min-width: 170px;
 }
 
 .login-page {

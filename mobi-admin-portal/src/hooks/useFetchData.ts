@@ -8,10 +8,6 @@ import { fetchEvents } from "../redux/slices/eventsSlice";
 const useFetchData = () => {
   const dispatch = useAppDispatch();
 
-  // const { loading, success, error, type } = useSelector(
-  //   (state: RootState) => state.apiStatus
-  // );
-
   // User authentication state
   const { user, isAuthenticated } = useAuth();
 
