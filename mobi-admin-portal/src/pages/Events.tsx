@@ -10,16 +10,22 @@ import { setEvents } from "../redux/slices/eventsSlice";
 function Events() {
   const dispatch = useDispatch();
   const events = useSelector((state: RootState) => state.events.data);
-  const { loading, error } = useApi("events", "/api/events", "GET", (data) => {
-    dispatch(setEvents(data));
-  });
+  const { loading, error } = useApi(
+    "events",
+    "http://localhost:3000/admin/dashboard/event/get/all",
+    "GET",
+    (data) => {
+      dispatch(setEvents(data));
+    },
+    events
+  );
 
   return (
-    <div className="">
+    <div className="d-flex flex-column gap-3">
       <h1>Events</h1>
       <Accordion>
         <Accordion.Item eventKey="0">
-          <Accordion.Header>Accordion Item #1</Accordion.Header>
+          <Accordion.Header>Create New Event</Accordion.Header>
           <Accordion.Body>
             <CreateEventForm />
           </Accordion.Body>

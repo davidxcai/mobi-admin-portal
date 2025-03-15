@@ -37,7 +37,7 @@ function renderPage(currentPage: string) {
 
 function MainContainer() {
   const { currentPage } = useUi();
-  console.log(currentPage); // Logs current page for debugging
+  // console.log(currentPage); // Logs current page for debugging
   return (
     <>
       {/* {renderNav(currentPage)} */}

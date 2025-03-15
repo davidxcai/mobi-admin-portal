@@ -1,35 +1,70 @@
+import { useState } from "react";
 import useAuth from "../../hooks/useAuth";
+import useApi from "../../hooks/useApi";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
+import Alert from "react-bootstrap/Alert";
 
 function LoginForm() {
   const { handleLogin } = useAuth();
+  const [formData, setFormData] = useState({ student_id: "", password: "" });
+  const {
+    sendRequest: login,
+    loading,
+    error,
+  } = useApi("login", "http://localhost:3000/login", "POST");
+
+  const handleChange = (e: any) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: any) => {
+    // console.log(formData);
+    e.preventDefault();
+    const response = await login(formData);
+
+    if (response?.data) {
+      handleLogin(response.data); // Store user data in Redux & update isAuthenticated
+    }
+  };
+
   return (
-    <Form className="mw-md">
-      <Form.Group className="mb-3" controlId="studentID">
+    <Form className="mw-md" onSubmit={handleSubmit}>
+      {error && <Alert variant="danger">Error logging in</Alert>}
+
+      <Form.Group className="mb-3" controlId="student_id">
         <Form.Control
           type="text"
+          name="student_id"
           placeholder="Student ID"
           className="custom-input"
+          value={formData.student_id}
+          onChange={handleChange}
         />
       </Form.Group>
+
       <Form.Group className="mb-3" controlId="password">
         <Form.Control
           type="password"
+          name="password"
           placeholder="Password"
           className="custom-input"
+          value={formData.password}
+          onChange={handleChange}
         />
       </Form.Group>
+
       <Form.Group className="mb-3" controlId="checkbox">
         <Form.Check type="checkbox" label="Remember me" />
       </Form.Group>
+
       <Button
         type="submit"
         className="w-100"
         variant="primary"
-        onClick={handleLogin}
+        disabled={loading}
       >
-        Login
+        {loading ? "Logging in..." : "Login"}
       </Button>
     </Form>
   );

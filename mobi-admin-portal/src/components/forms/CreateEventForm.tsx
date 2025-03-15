@@ -4,13 +4,11 @@ import useApi from "../../hooks/useApi";
 
 function CreateEventForm() {
   const [formData, setFormData] = useState({
-    name: "",
+    event_name: "",
     location: "",
     momocoins: 0,
-    duration: {
-      start: "",
-      end: "",
-    },
+    start_time: new Date().toISOString().slice(0, 16), // Default to current time
+    end_time: new Date().toISOString().slice(0, 16),
   });
 
   const {
@@ -24,13 +22,23 @@ function CreateEventForm() {
   );
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    const { name, value, type } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "number" ? parseInt(value, 10) || 0 : value,
+    }));
   };
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    createEvent(formData);
+    const response = await createEvent(formData);
+    if (response?.data) {
+      console.log(response.data.event.event_id);
+      alert(`Event created! Event ID: ${response.data.event.event_id}`);
+    } else {
+      alert("Failed to create event");
+    }
   };
 
   return (
@@ -41,8 +49,8 @@ function CreateEventForm() {
         <Form.Label>Event Name</Form.Label>
         <Form.Control
           type="text"
-          name="name"
-          value={formData.name}
+          name="event_name" // FIXED
+          value={formData.event_name}
           onChange={handleInputChange}
           placeholder="Enter event name"
         />
@@ -60,21 +68,21 @@ function CreateEventForm() {
       </Form.Group>
 
       <Form.Group controlId="formEventDateStart">
-        <Form.Label>Date Start</Form.Label>
+        <Form.Label>Start Date & Time</Form.Label>
         <Form.Control
-          type="date"
-          name="date"
-          value={formData.duration.start}
+          type="datetime-local"
+          name="start_time" // FIXED
+          value={formData.start_time}
           onChange={handleInputChange}
         />
       </Form.Group>
 
       <Form.Group controlId="formEventDateEnd">
-        <Form.Label>Date End</Form.Label>
+        <Form.Label>End Date & Time</Form.Label>
         <Form.Control
-          type="date"
-          name="date"
-          value={formData.duration.end}
+          type="datetime-local"
+          name="end_time" // FIXED
+          value={formData.end_time}
           onChange={handleInputChange}
         />
       </Form.Group>
@@ -83,7 +91,7 @@ function CreateEventForm() {
         <Form.Label>Momo Coins</Form.Label>
         <Form.Control
           type="number"
-          name="attendance"
+          name="momocoins"
           value={formData.momocoins}
           onChange={handleInputChange}
         />
