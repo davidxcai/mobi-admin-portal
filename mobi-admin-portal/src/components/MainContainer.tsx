@@ -7,7 +7,6 @@ import Merchandise from "../pages/Merchandise";
 import Projects from "../pages/Projects";
 import Settings from "../pages/Settings";
 import useUi from "../hooks/useUi";
-import useFetchData from "../hooks/useFetchData";
 
 function renderPage(currentPage: string) {
   switch (currentPage) {
@@ -38,8 +37,7 @@ function renderPage(currentPage: string) {
 
 function MainContainer() {
   const { currentPage } = useUi();
-  useFetchData();
-  // console.log(currentPage); // Logs current page for debugging
+  console.log(currentPage); // Logs current page for debugging
   return (
     <>
       {/* {renderNav(currentPage)} */}

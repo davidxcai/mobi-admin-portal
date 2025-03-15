@@ -17,11 +17,14 @@ export const apiRequest = createAsyncThunk(
     const options: RequestInit = {
       method,
       headers: { "Content-Type": "application/json" },
+      credentials: "include",
     };
     if (body) options.body = JSON.stringify(body);
 
     const response = await fetch(url, options);
-    if (!response.ok) throw new Error(`Failed to fetch ${key}`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch ${key}`);
+    }
     return { key, data: await response.json() };
   }
 );

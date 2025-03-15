@@ -1,7 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useCallback } from "react";
 import { RootState } from "../redux/store";
-import useAuth from "./useAuth";
 import { AppDispatch } from "../redux/store";
 
 import { apiRequest } from "../redux/slices/apiSlice";
@@ -10,9 +9,10 @@ import { apiRequest } from "../redux/slices/apiSlice";
 const useApi = (
   key: string,
   url: string,
-  method: "GET" | "POST" | "PUT" | "DELETE" = "GET"
+  method: "GET" | "POST" | "PUT" | "DELETE" = "GET",
+  onSuccess?: (data: any) => void,
+  existingData?: any
 ) => {
-  const { user, isAuthenticated } = useAuth();
   const dispatch = useDispatch<AppDispatch>();
 
   // Redux selectors
@@ -22,19 +22,24 @@ const useApi = (
 
   // Send API request
   const sendRequest = useCallback(
-    (body?: any) => {
-      dispatch(apiRequest({ key, url, method, body }));
+    async (body?: any) => {
+      const resultAction = await dispatch(
+        apiRequest({ key, url, method, body })
+      );
+
+      if (apiRequest.fulfilled.match(resultAction) && onSuccess) {
+        onSuccess(resultAction.payload.data);
+      }
     },
-    [dispatch, key, url, method]
+    [dispatch, key, url, method, onSuccess]
   );
 
-  // Auto-fetch when authenticated
-  // Do not modify this useEffect, make custom requests in the component
+  // Auto-fetch when no existing data
   useEffect(() => {
-    if (user && isAuthenticated && method === "GET") {
+    if (!existingData || existingData.length === 0) {
       sendRequest();
     }
-  }, [user, isAuthenticated, sendRequest, method]);
+  }, [existingData, sendRequest]);
 
   return { data, loading, error, sendRequest };
 };

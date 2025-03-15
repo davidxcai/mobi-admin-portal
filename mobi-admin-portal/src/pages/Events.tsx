@@ -1,32 +1,32 @@
 import { RootState } from "../redux/store";
 import { useSelector } from "react-redux";
-import Button from "react-bootstrap/Button";
-import useUi from "../hooks/useUi";
+import Accordion from "react-bootstrap/Accordion";
 import DynamicTable from "../components/DynamicTable";
-import DynamicModal from "../components/DynamicModal";
 import CreateEventForm from "../components/forms/CreateEventForm";
+import { useDispatch } from "react-redux";
+import useApi from "../hooks/useApi";
+import { setEvents } from "../redux/slices/eventsSlice";
 
 function Events() {
-  const { openModalHandler } = useUi();
+  const dispatch = useDispatch();
   const events = useSelector((state: RootState) => state.events.data);
-
-  const handleCreateEvent = () => {
-    console.log("Create Event");
-  };
+  const { loading, error } = useApi("events", "/api/events", "GET", (data) => {
+    dispatch(setEvents(data));
+  });
 
   return (
     <div className="">
       <h1>Events</h1>
-      <Button variant="primary" onClick={() => openModalHandler()}>
-        Create Event
-      </Button>
-      <DynamicTable data={events} />
-      <DynamicModal
-        title="Create Event"
-        content={<CreateEventForm />}
-        confirmText="Create"
-        confirmAction={handleCreateEvent}
-      />
+      <Accordion>
+        <Accordion.Item eventKey="0">
+          <Accordion.Header>Accordion Item #1</Accordion.Header>
+          <Accordion.Body>
+            <CreateEventForm />
+          </Accordion.Body>
+        </Accordion.Item>
+      </Accordion>
+      {loading ? <p>Loading events...</p> : <DynamicTable data={events} />}
+      {error && <p>Error: {error}</p>}
     </div>
   );
 }
