@@ -33,7 +33,7 @@ const useAuth = () => {
 
   const { sendRequest: logoutApi, loading } = useApi(
     "logout",
-    "http://localhost:3000/logout",
+    "http://localhost:3000/api/auth/logout",
     "POST"
   );
 

@@ -7,12 +7,12 @@ import Alert from "react-bootstrap/Alert";
 
 function LoginForm() {
   const { handleLogin } = useAuth();
-  const [formData, setFormData] = useState({ student_id: "", password: "" });
+  const [formData, setFormData] = useState({ username: "", password: "" });
   const {
     sendRequest: login,
     loading,
     error,
-  } = useApi("login", "http://localhost:3000/login", "POST");
+  } = useApi("login", "http://localhost:3000/auth/login", "POST");
 
   const handleChange = (e: any) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -32,13 +32,13 @@ function LoginForm() {
     <Form className="mw-md" onSubmit={handleSubmit}>
       {error && <Alert variant="danger">Error logging in</Alert>}
 
-      <Form.Group className="mb-3" controlId="student_id">
+      <Form.Group className="mb-3" controlId="username">
         <Form.Control
           type="text"
-          name="student_id"
-          placeholder="Student ID"
+          name="username"
+          placeholder="Username"
           className="custom-input"
-          value={formData.student_id}
+          value={formData.username}
           onChange={handleChange}
         />
       </Form.Group>

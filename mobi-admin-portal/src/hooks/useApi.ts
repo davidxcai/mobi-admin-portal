@@ -15,6 +15,8 @@ const useApi = <T = any>(
 ) => {
   const dispatch = useDispatch<AppDispatch>();
 
+  const events = useSelector((state: RootState) => state.events.data);
+
   // Redux selectors
   const data = useSelector((state: RootState) => state.api.data[key]);
   const loading = useSelector((state: RootState) => state.api.loading[key]);
@@ -33,7 +35,12 @@ const useApi = <T = any>(
       // If successful, run onSuccess function (optional) and return data
       if (apiRequest.fulfilled.match(resultAction)) {
         const responseData = resultAction.payload.data as T; // Explicitly type data
+
+        console.log("responseData", responseData);
+
         if (onSuccess) onSuccess(responseData);
+
+        console.log("events", events);
         return { data: responseData };
       }
 
