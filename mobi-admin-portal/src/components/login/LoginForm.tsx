@@ -29,7 +29,7 @@ function LoginForm() {
   };
 
   return (
-    <Form className="mw-md" onSubmit={handleSubmit}>
+    <Form className="mw-md fade-in" onSubmit={handleSubmit}>
       {error && <Alert variant="danger">Error logging in</Alert>}
 
       <Form.Group className="mb-3" controlId="username">

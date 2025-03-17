@@ -73,3 +73,18 @@ body {
     background-color: var(--secondary-color);
   }
 }
+
+.fade-in {
+  opacity: 0;
+  animation: fadeIn 1s ease-in forwards;
+  animation-delay: 0.5s; /* Wait half a second before starting */
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

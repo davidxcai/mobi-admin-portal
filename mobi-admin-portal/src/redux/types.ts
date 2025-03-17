@@ -7,3 +7,14 @@ export interface User {
   };
   role: string;
 }
+
+export interface Event {
+  eventId: string;
+  eventName: string;
+  location: string;
+  time: {
+    start: string;
+    end: string;
+  };
+  attendance: number;
+}
