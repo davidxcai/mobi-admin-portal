@@ -1,0 +1,15 @@
+// Override bootstrap component styles
+
+thead {
+  background-color: var(--dark-color) !important;
+}
+
+tbody {
+  background-color: transparent;
+  tr {
+    padding: 16px;
+    &:hover {
+      background-color: var(--menu-highlight-color) !important;
+    }
+  }
+}

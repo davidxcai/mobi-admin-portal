@@ -4,19 +4,28 @@ import { Event } from "../redux/types";
 
 import {
   setEvents,
+  addEvent,
   clearEvents,
   setCurrentEvent,
   clearCurrentEvent,
 } from "../redux/slices/eventsSlice";
+import { clearCheckIns } from "../redux/slices/checkinSlice";
 
 const useEvents = () => {
   const dispatch = useDispatch();
 
-  const event = useSelector((state: any) => state.events);
+  const events = useSelector((state: any) => state.events.data);
 
   const handleSetEvents = useCallback(
     (events: Event[]) => {
       dispatch(setEvents(events));
+    },
+    [dispatch]
+  );
+
+  const handleAddEvent = useCallback(
+    (event: Event) => {
+      dispatch(addEvent(event));
     },
     [dispatch]
   );
@@ -27,9 +36,13 @@ const useEvents = () => {
 
   const handleSetCurrentEvent = useCallback(
     (eventId: String) => {
-      const foundEvent = event.find(
+      const foundEvent = events.find(
         (event: Event) => event.eventId === eventId
       );
+      if (!foundEvent) {
+        alert("Event not found");
+        return;
+      }
       dispatch(setCurrentEvent(foundEvent));
     },
     [dispatch]
@@ -37,17 +50,20 @@ const useEvents = () => {
 
   const handleClearCurrentEvent = useCallback(() => {
     dispatch(clearCurrentEvent());
+    dispatch(clearCheckIns());
   }, [dispatch]);
 
   return useMemo(
     () => ({
       handleSetEvents,
+      handleAddEvent,
       handleClearEvents,
       handleSetCurrentEvent,
       handleClearCurrentEvent,
     }),
     [
       handleSetEvents,
+      handleAddEvent,
       handleClearEvents,
       handleSetCurrentEvent,
       handleClearCurrentEvent,

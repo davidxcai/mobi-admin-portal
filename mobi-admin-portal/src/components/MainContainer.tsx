@@ -43,7 +43,9 @@ function MainContainer() {
       {/* {renderNav(currentPage)} */}
       <div
         className={
-          currentPage === "login" ? "" : "p-5 d-flex flex-grow-1 fade-in"
+          currentPage === "login"
+            ? ""
+            : "p-5 d-flex flex-column flex-grow-1 fade-in"
         }
       >
         {renderPage(currentPage)}

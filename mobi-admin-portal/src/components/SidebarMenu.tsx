@@ -11,7 +11,7 @@ function SidebarMenu() {
       {menuItems.map((page: string) => (
         <button
           key={page}
-          className={`sidebar-btn px-4 py-2 ${
+          className={`sidebar-btn px-4 py-2 fade-in ${
             currentPage === page.toLowerCase() ? "active" : ""
           }`}
           onClick={() => changePage(page.toLowerCase())}
@@ -19,7 +19,7 @@ function SidebarMenu() {
           {page}
         </button>
       ))}
-      <button className="sidebar-btn px-4 py-2" onClick={handleLogout}>
+      <button className="sidebar-btn px-4 py-2 fade-in" onClick={handleLogout}>
         Logout
       </button>
     </>

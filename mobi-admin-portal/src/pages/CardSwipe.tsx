@@ -1,62 +1,127 @@
 import { useCaptureSwipe } from "../hooks/useCaptureSwipe";
 import { Button, Form } from "react-bootstrap";
-import { useSelector, useDispatch } from "react-redux";
-import { Event } from "../redux/types";
+import { useSelector } from "react-redux";
 import { useState } from "react";
-import { setCurrentEvent } from "../redux/slices/eventsSlice";
-// import { useState } from "react";
+import useEvent from "../hooks/useEvents";
+import useApi from "../hooks/useApi";
+import useCheckins from "../hooks/useCheckins";
+import CheckInTable from "../components/tables/CheckInTable";
+import { formatDate } from "../utils/tableUtils";
+import { InputGroup } from "react-bootstrap";
+import { useEffect } from "react";
 
 function CardSwipe() {
-  const dispatch = useDispatch();
-  const { handleCaptureActive, handleCaptureInactive } = useCaptureSwipe();
+  // Local States
   const [eventId, setEventId] = useState("");
+  const isValidEvent = eventId.length === 5 ? true : false;
+  // if current time is greater than end time or less than start time, do not allow swipe
+
+  // Redux Store
+  const checkins = useSelector((state: any) => state.checkin?.data);
   const isActive = useSelector((state: any) => state.cardswipe.captureActive);
   const CurrentEvent = useSelector((state: any) => state.events.currentEvent);
+
+  // Custom Hooks
+  const { handleCaptureActive, handleCaptureInactive } = useCaptureSwipe();
+  const { handleSetCurrentEvent, handleClearCurrentEvent } = useEvent();
+  const { handlePopulateCheckins } = useCheckins();
+  const {
+    sendRequest: getAllCheckins,
+    loading,
+    error,
+  } = useApi(
+    "checkins",
+    `http://localhost:3000/api/checkin/getAll/${eventId}`,
+    "GET",
+    (data) => {
+      handlePopulateCheckins(data.checkins);
+    },
+    checkins,
+    { autoFetch: false }
+  );
+
+  // onClicks
   const handleSetEvent = () => {
-    const event = useSelector((state: any) => state.events);
-    const foundEvent = event.find((event: Event) => event.eventId === eventId);
-    if (foundEvent) {
-      alert("Event found");
-      dispatch(setCurrentEvent(foundEvent));
-    } else {
-      alert("Event not found");
-    }
+    handleSetCurrentEvent(eventId);
+    getAllCheckins();
   };
 
+  const clearCurrentEvent = () => {
+    handleClearCurrentEvent();
+    handleCaptureInactive();
+    setEventId("");
+  };
+
+  // Stop capturing when component unmounts
+  useEffect(() => {
+    handleCaptureInactive();
+  }, []);
+
   return (
-    <div>
+    <>
       <h1>CardSwipe</h1>
-      <div className="d-flex flex-row ">
-        <Form className="flex-grow-1">
-          <Form.Group className="mb-3" controlId="eventId">
-            <Form.Label>Current Event</Form.Label>
+      <div className="d-flex flex-row gap-5">
+        <div className="flex-grow-1">
+          <Form.Label>Event ID</Form.Label>
+          <InputGroup className="mb-3">
             <Form.Control
               type="text"
               placeholder="Enter Event ID"
               onChange={(e) => setEventId(e.target.value)}
+              aria-label="eventId"
+              aria-describedby="eventId"
             />
-          </Form.Group>
-        </Form>
-        <Button onClick={handleSetEvent} variant="primary">
-          Set Event
-        </Button>
-        <div className="flex-grow-1">
-          <h3>Current Event</h3>
-          <p>{CurrentEvent?.eventName}</p>
-          <p>{CurrentEvent?.location}</p>
-          <p>{CurrentEvent?.time.start}</p>
-          <p>{CurrentEvent?.time.end}</p>
-          <p>{CurrentEvent?.attendance}</p>
+            <Button
+              onClick={() =>
+                CurrentEvent ? clearCurrentEvent() : handleSetEvent()
+              }
+              variant={CurrentEvent ? "outline-info" : "outline-primary"}
+              disabled={!CurrentEvent && !isValidEvent}
+            >
+              {CurrentEvent ? "Clear Event" : "Set Event"}
+            </Button>
+          </InputGroup>
+
+          <div>
+            <Button
+              onClick={isActive ? handleCaptureInactive : handleCaptureActive}
+              variant={isActive ? "danger" : "primary"}
+              disabled={!CurrentEvent}
+            >
+              {isActive ? "Capturing..." : "Capture"}
+            </Button>
+          </div>
+        </div>
+
+        <div className="flex-grow-1 row">
+          {!CurrentEvent ? (
+            <p>No current event set</p>
+          ) : (
+            <div className="col-auto">
+              <p>Event Name</p>
+              <p>Event ID</p>
+              <p>Attendance</p>
+              <p>Location</p>
+              <p>Date-Time Start</p>
+              <p>Date-Time End</p>
+              <p>Momo Coins</p>
+            </div>
+          )}
+          <div className="col flex-grow-1">
+            <p>{CurrentEvent?.eventName}</p>
+            <p>{CurrentEvent?.eventId}</p>
+            <p>{CurrentEvent?.attendance}</p>
+            <p>{CurrentEvent?.location}</p>
+            <p>{formatDate(CurrentEvent?.time.start)}</p>
+            <p>{formatDate(CurrentEvent?.time.end)}</p>
+            <p>{CurrentEvent?.momocoins}</p>
+          </div>
         </div>
       </div>
 
-      <Button
-        onClick={isActive ? handleCaptureInactive : handleCaptureActive}
-        variant={isActive ? "danger" : "primary"}
-      >
-        {isActive ? "Capturing..." : "Capture"}
-      </Button>
-    </div>
+      {loading ? <p>Loading checkins...</p> : <CheckInTable />}
+      {error && <p>Error: {error}</p>}
+    </>
   );
 }
 

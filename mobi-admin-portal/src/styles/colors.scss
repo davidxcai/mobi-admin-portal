@@ -9,6 +9,8 @@ $light-light: #f8f9fa;
 $dark-light: #343a40;
 $bg-light: #ffffff;
 $text-light: #000000;
+$text-grey-light: #6c757d;
+$menu-highlight-light: #0d1b2a;
 
 // ✅ Define custom dark mode colors
 $primary-dark: #1444e1;
@@ -21,6 +23,8 @@ $light-dark: #9fe5ff;
 $dark-dark: #06121e;
 $bg-dark: #050d15;
 $text-dark: #d8dde8;
+$text-grey-dark: #6c757d;
+$menu-highlight-dark: #172f49;
 
 // ✅ Apply global variables using CSS custom properties
 :root {
@@ -34,6 +38,8 @@ $text-dark: #d8dde8;
   --dark-color: #{$dark-light};
   --bg-color: #{$bg-light};
   --text-color: #{$text-light};
+  --text-grey-color: #{$text-grey-light};
+  --menu-highlight-color: #{$menu-highlight-light};
 
   @media (prefers-color-scheme: dark) {
     --primary-color: #{$primary-dark};
@@ -46,6 +52,8 @@ $text-dark: #d8dde8;
     --dark-color: #{$dark-dark};
     --bg-color: #{$bg-dark};
     --text-color: #{$text-dark};
+    --text-grey-color: #{$text-grey-dark};
+    --menu-highlight-color: #{$menu-highlight-dark};
   }
 }
 

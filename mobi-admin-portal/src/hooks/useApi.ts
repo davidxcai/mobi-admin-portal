@@ -11,7 +11,8 @@ const useApi = <T = any>(
   url: string,
   method: "GET" | "POST" | "PUT" | "DELETE" = "GET",
   onSuccess?: (data: T) => void, // Ensure onSuccess uses generic type T
-  existingData?: any
+  existingData?: any,
+  options: { autoFetch?: boolean } = { autoFetch: true }
 ) => {
   const dispatch = useDispatch<AppDispatch>();
 
@@ -53,6 +54,9 @@ const useApi = <T = any>(
   useEffect(() => {
     const noData = !existingData || existingData.length === 0;
     const loggedIn = user && isAuthenticated;
+    if (!options.autoFetch) {
+      return;
+    }
     if (loggedIn && noData && method === "GET") {
       sendRequest();
     }

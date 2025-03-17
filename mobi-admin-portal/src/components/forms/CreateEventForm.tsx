@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Form, Button, Alert } from "react-bootstrap";
 import useApi from "../../hooks/useApi";
+import useEvent from "../../hooks/useEvents";
 
 function CreateEventForm() {
   const [formData, setFormData] = useState({
@@ -16,6 +17,7 @@ function CreateEventForm() {
     loading,
     error,
   } = useApi("createEvent", "http://localhost:3000/api/event/create", "POST");
+  const { handleAddEvent } = useEvent();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type } = e.target;
@@ -30,6 +32,7 @@ function CreateEventForm() {
     e.preventDefault();
     const response = await createEvent(formData);
     if (response?.data) {
+      handleAddEvent(response.data.event[0]);
       console.log(response?.data?.event[0].eventId);
       alert(`Event created! Event ID: ${response?.data?.event[0].eventId}`);
     } else {

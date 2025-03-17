@@ -1,6 +1,7 @@
 @import "bootstrap/scss/bootstrap";
 @import "./colors.scss";
 @import "./buttons.scss";
+@import "./component.scss";
 
 // Apply colors to body
 body {
@@ -66,11 +67,15 @@ body {
 
 .sidebar-btn {
   all: unset;
+  color: var(--text-grey-color);
   &:hover {
-    background-color: var(--secondary-color);
+    background-color: var(--menu-highlight-color);
+    color: var(--text-color);
   }
   &.active {
-    background-color: var(--secondary-color);
+    background-color: var(--menu-highlight-color);
+    color: var(--text-color);
+    border-left: 3px solid var(--secondary-color);
   }
 }
 

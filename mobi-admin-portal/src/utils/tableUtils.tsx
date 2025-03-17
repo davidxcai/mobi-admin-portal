@@ -19,6 +19,7 @@ export const formatHeader = (header: string) =>
 
 // Formats date strings to "Mar 11, 2025 - 11:00 PM"
 export const formatDate = (dateStr: string) => {
+  if (!dateStr) return null;
   return new Date(dateStr)
     .toLocaleString("en-US", {
       month: "short",

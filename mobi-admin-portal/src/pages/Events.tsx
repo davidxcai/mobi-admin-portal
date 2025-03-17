@@ -1,17 +1,22 @@
 import { RootState } from "../redux/store";
 import { useSelector } from "react-redux";
 import Accordion from "react-bootstrap/Accordion";
-import DynamicTable from "../components/DynamicTable";
 import CreateEventForm from "../components/forms/CreateEventForm";
 import { useDispatch } from "react-redux";
 import useApi from "../hooks/useApi";
 import { setEvents } from "../redux/slices/eventsSlice";
 import Button from "react-bootstrap/Button";
+import EventTable from "../components/tables/EventTable";
+// import { Alert } from "react-bootstrap";
 
 function Events() {
   const dispatch = useDispatch();
   const events = useSelector((state: RootState) => state.events.data);
-  const { loading, error } = useApi(
+  const {
+    sendRequest: getAllEvents,
+    loading,
+    error,
+  } = useApi(
     "events",
     "http://localhost:3000/api/event/getAll",
     "GET",
@@ -38,9 +43,12 @@ function Events() {
         </Accordion.Item>
       </Accordion>
       <div className="d-flex justify-content-end">
-        <Button variant="primary">Refresh Events</Button>
+        <Button variant="primary" onClick={() => getAllEvents()}>
+          Refresh Events
+        </Button>
       </div>
-      {loading ? <p>Loading events...</p> : <DynamicTable data={events} />}
+      {/* <Alert variant="success">New Event Created! Event ID: </Alert> */}
+      {loading ? <p>Loading events...</p> : <EventTable />}
       {error && <p>Error: {error}</p>}
     </div>
   );

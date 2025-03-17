@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface CheckIn {
-  event_id: string;
-  student_id: string;
+  eventId: string;
+  studentId: string;
   username: string | null;
   name: {
     first: string;
@@ -13,11 +13,11 @@ export interface CheckIn {
 }
 
 interface checkinState {
-  checkIns: CheckIn[];
+  data: CheckIn[];
 }
 
 const initialState: checkinState = {
-  checkIns: [],
+  data: [],
 };
 
 const checkinSlice = createSlice({
@@ -25,18 +25,21 @@ const checkinSlice = createSlice({
   initialState,
   reducers: {
     setCheckIns: (state, action: PayloadAction<CheckIn[]>) => {
-      state.checkIns = action.payload;
+      state.data = action.payload;
+    },
+    addCheckIn: (state, action: PayloadAction<CheckIn>) => {
+      state.data.push(action.payload);
     },
     clearCheckIns: (state) => {
-      state.checkIns = [];
+      state.data = [];
     },
   },
   extraReducers: (builder) => {
     builder.addCase("events/clearCurrentEvent", (state) => {
-      state.checkIns = [];
+      state.data = [];
     });
   },
 });
 
 export const checkinReducer = checkinSlice.reducer;
-export const { setCheckIns, clearCheckIns } = checkinSlice.actions;
+export const { setCheckIns, addCheckIn, clearCheckIns } = checkinSlice.actions;

@@ -9,6 +9,7 @@ export interface Event {
     start: string;
     end: string;
   };
+  momocoins: number;
   attendance: number;
 }
 
@@ -34,6 +35,9 @@ const EventsSlice = createSlice({
     setEvents: (state, action: PayloadAction<Event[]>) => {
       state.data = action.payload;
     },
+    addEvent: (state, action: PayloadAction<Event>) => {
+      state.data.push(action.payload);
+    },
     clearEvents: (state) => {
       state.data = [];
     },
@@ -47,5 +51,10 @@ const EventsSlice = createSlice({
 });
 
 export const eventsReducer = EventsSlice.reducer;
-export const { setEvents, clearEvents, setCurrentEvent, clearCurrentEvent } =
-  EventsSlice.actions;
+export const {
+  setEvents,
+  addEvent,
+  clearEvents,
+  setCurrentEvent,
+  clearCurrentEvent,
+} = EventsSlice.actions;

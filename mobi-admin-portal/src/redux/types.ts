@@ -16,5 +16,18 @@ export interface Event {
     start: string;
     end: string;
   };
+  momocoins: number;
   attendance: number;
+}
+
+export interface CheckIn {
+  eventId: string;
+  studentId: string;
+  username: string | null;
+  name: {
+    first: string;
+    last: string;
+  };
+  momocoins: number;
+  time: string;
 }
