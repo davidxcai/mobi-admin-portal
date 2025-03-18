@@ -14,15 +14,18 @@ function CardSwipe() {
   // Local States
   const [eventId, setEventId] = useState("");
   const isValidEvent = eventId.length === 5 ? true : false;
+  const [isCapturingActive, setIsCapturingActive] = useState(false);
   // if current time is greater than end time or less than start time, do not allow swipe
+  console.log("isCapturingActive", isCapturingActive);
 
   // Redux Store
   const checkins = useSelector((state: any) => state.checkin?.data);
-  const isActive = useSelector((state: any) => state.cardswipe.captureActive);
+  // const isCapturingActive = useSelector((state: any) => state.cardswipe.captureActive);
   const CurrentEvent = useSelector((state: any) => state.events.currentEvent);
 
   // Custom Hooks
-  const { handleCaptureActive, handleCaptureInactive } = useCaptureSwipe();
+  const { handleCaptureActive, handleCaptureInactive } =
+    useCaptureSwipe(setIsCapturingActive);
   const { handleSetCurrentEvent, handleClearCurrentEvent } = useEvent();
   const { handlePopulateCheckins } = useCheckins();
   const {
@@ -70,6 +73,7 @@ function CardSwipe() {
               onChange={(e) => setEventId(e.target.value)}
               aria-label="eventId"
               aria-describedby="eventId"
+              disabled={CurrentEvent ? true : false}
             />
             <Button
               onClick={() =>
@@ -82,14 +86,20 @@ function CardSwipe() {
             </Button>
           </InputGroup>
 
-          <div>
+          <div className="d-flex">
             <Button
-              onClick={isActive ? handleCaptureInactive : handleCaptureActive}
-              variant={isActive ? "danger" : "primary"}
+              onClick={
+                isCapturingActive ? handleCaptureInactive : handleCaptureActive
+              }
+              variant={isCapturingActive ? "danger" : "primary"}
               disabled={!CurrentEvent}
             >
-              {isActive ? "Capturing..." : "Capture"}
+              {isCapturingActive ? "Capturing..." : "Capture"}
             </Button>
+            <div>
+              {isCapturingActive && loading ? <p>Reading Swipe...</p> : null}
+              {isCapturingActive && error ? <p>Error: {error}</p> : null}
+            </div>
           </div>
         </div>
 

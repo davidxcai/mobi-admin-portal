@@ -7,6 +7,7 @@ import Merchandise from "../pages/Merchandise";
 import Projects from "../pages/Projects";
 import Settings from "../pages/Settings";
 import useUi from "../hooks/useUi";
+import { useSelector } from "react-redux";
 
 function renderPage(currentPage: string) {
   switch (currentPage) {
@@ -31,16 +32,23 @@ function renderPage(currentPage: string) {
   }
 }
 
-// function renderNav(currentPage: string) {
-//   return currentPage === "login" ? null : <Nav />;
+// function renderNav(currentPage: string, user: string) {
+//   return currentPage === "login" ? null : (
+//     <Navbar>
+//       <Container className="d-flex justify-content-end p-3">
+//         <p>Hello, {user}</p>
+//       </Container>
+//     </Navbar>
+//   );
 // }
 
 function MainContainer() {
   const { currentPage } = useUi();
+  const user = useSelector((state: any) => state.auth.user?.name.firstName);
   // console.log(currentPage); // Logs current page for debugging
   return (
     <>
-      {/* {renderNav(currentPage)} */}
+      {/* {renderNav(currentPage, user)} */}
       <div
         className={
           currentPage === "login"
@@ -48,6 +56,9 @@ function MainContainer() {
             : "p-5 d-flex flex-column flex-grow-1 fade-in"
         }
       >
+        {currentPage === "login" ? null : (
+          <p className="text-end fade-in">Hello, {user}</p>
+        )}
         {renderPage(currentPage)}
       </div>
     </>

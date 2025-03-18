@@ -6,10 +6,10 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 // :string enforces it to always be a string. if a number, typescript will give error
 interface User {
   username: string | null;
-  student_id: string;
+  studentId: string;
   name: {
-    first: string;
-    last: string;
+    firstName: string;
+    lastName: string;
   };
   role: string;
 }

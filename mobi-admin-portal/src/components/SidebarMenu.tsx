@@ -7,7 +7,9 @@ function SidebarMenu() {
   const { handleLogout } = useAuth();
   return (
     <>
-      <h4 className="space-grotesk bold m-4 fade-in">MOBI BYTE</h4>
+      <h4 className="space-grotesk bold m-4 fade-in gradient-text">
+        MOBI BYTE
+      </h4>
       {menuItems.map((page: string) => (
         <button
           key={page}

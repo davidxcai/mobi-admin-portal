@@ -93,3 +93,9 @@ body {
     opacity: 1;
   }
 }
+
+.gradient-text {
+  background: linear-gradient(to right, var(--secondary-color), #b283ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
