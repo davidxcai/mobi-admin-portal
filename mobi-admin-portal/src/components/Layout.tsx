@@ -1,31 +1,33 @@
 import Sidebar from "./Sidebar";
 import MainContainer from "./MainContainer";
+import { Flex } from "@mantine/core";
 import useAuth from "../hooks/useAuth";
 
-// import useUi from "../hooks/useUi";
-
 function Layout() {
-  // const { currentPage } = useUi();
   const { user, isAuthenticated } = useAuth();
-  const isLoggedIn =
-    user && isAuthenticated
-      ? ["", ""]
-      : [
-          "login-page align-items-center justify-content-center",
-          "align-items-center justify-content-center text-center",
-        ];
+  const isLoggedIn = user && isAuthenticated;
 
   return (
-    <div className="d-flex align-items-center vh-100">
-      <div className={`d-flex flex-column vh-100 sidebar ${isLoggedIn[0]}`}>
+    <Flex align="center" className="vh-100">
+      <Flex
+        justify={isLoggedIn ? "" : "center"}
+        align={isLoggedIn ? "" : "center"}
+        className={`sidebar ${isLoggedIn ? "" : "login-page"}`}
+        h="100vh"
+      >
         <Sidebar />
-      </div>
-      <main
-        className={`d-flex flex-column vh-100 gap-5 flex-grow-1 ${isLoggedIn[1]}`}
+      </Flex>
+      <Flex
+        direction="column"
+        h="100vh"
+        flex="1"
+        gap="lg"
+        align={isLoggedIn ? "stratch" : "center"}
+        justify={isLoggedIn ? "flex-start" : "center"}
       >
         <MainContainer />
-      </main>
-    </div>
+      </Flex>
+    </Flex>
   );
 }
 
