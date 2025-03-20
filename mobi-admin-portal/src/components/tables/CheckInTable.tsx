@@ -20,11 +20,11 @@ const renderTableBody = (rows: any[]) => (
     {rows.map((checkin, checkinIndex) => (
       <tr
         key={checkinIndex}
-        className={checkin?.newMember ? "table-success" : ""}
+        // className={checkin?.newMember ? "table-success" : ""}
       >
         <td>
           {checkin.name?.firstName} {checkin.name?.lastName}{" "}
-          {checkin?.newMember ? <Badge bg="secondary">New Member</Badge> : ""}
+          {checkin?.newMember ? <Badge bg="info">New Member</Badge> : ""}
         </td>
         <td>{checkin.eventId}</td>
         <td>{formatDate(checkin.timestamp)}</td>
