@@ -37,7 +37,6 @@ const renderTableBody = (rows: any[]) => (
     {rows.map((event, eventIndex) => (
       <tr key={eventIndex}>
         <td>{event.eventName}</td>
-
         <td
           onClick={() => copyToClipboard(event.eventId)}
           style={{ cursor: "pointer", textDecoration: "underline" }}

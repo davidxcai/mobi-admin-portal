@@ -4,7 +4,7 @@ import Accordion from "react-bootstrap/Accordion";
 import CreateEventForm from "../components/forms/CreateEventForm";
 import { useDispatch } from "react-redux";
 import useApi from "../hooks/useApi";
-import { setEvents } from "../redux/slices/eventsSlice";
+import { setEvents, clearEvents } from "../redux/slices/eventsSlice";
 import Button from "react-bootstrap/Button";
 import EventTable from "../components/tables/EventTable";
 // import { Alert } from "react-bootstrap";
@@ -55,16 +55,3 @@ function Events() {
 }
 
 export default Events;
-
-// import { useDispatch } from "react-redux";
-// import { setData } from "../redux/eventsSlice";
-
-// const UpdateEventDataButton = () => {
-//     const dispatch = useDispatch();
-
-//     const updateData = () => {
-//         dispatch(setData([{ id: 1, name: "Updated Event" }])); // Manually set data
-//     };
-
-//     return <button onClick={updateData}>Update Events</button>;
-// };
