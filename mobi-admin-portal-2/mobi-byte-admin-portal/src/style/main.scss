@@ -1,0 +1,21 @@
+@use "./_colors.scss";
+
+.space-grotesk {
+  // <weight>: Use a value from 300 to 700
+  font-family: "Space Grotesk", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.bold {
+  font-weight: 500;
+}
+
+.inter-bold {
+  // <weight>: Use a value from 100 to 900
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 800;
+  font-style: normal;
+}

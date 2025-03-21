@@ -1,20 +1,22 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
+import { useCardSwipe } from "./useCardSwipe";
+import { useEventListener } from "@mantine/hooks";
+import { Button } from "@mantine/core";
 
 function CaptureButton() {
-  const [isCapturingActive, setIsCapturingActive] = useState(false);
-  const buffer = useRef("");
+  const [isCapturing, setIsCapturing] = useState(false);
+  const { handleCardSwipe } = useCardSwipe();
 
-  const handleCardSwipe = (event: KeyboardEvent) => {
-    buffer.current += event.key;
-  };
+  const listenerRef = useEventListener("keydown", handleCardSwipe);
 
   return (
-    <button
-      onClick={() => setIsCapturingActive(!isCapturingActive)}
-      className={`btn btn-${isCapturingActive ? "danger" : "success"}`}
+    <Button
+      ref={isCapturing ? listenerRef : null}
+      onClick={() => setIsCapturing(!isCapturing)}
+      color={isCapturing ? "red" : "blue"}
     >
-      {isCapturingActive ? "Stop Capturing" : "Start Capturing"}
-    </button>
+      {isCapturing ? "Stop Capturing" : "Capture"}
+    </Button>
   );
 }
 
