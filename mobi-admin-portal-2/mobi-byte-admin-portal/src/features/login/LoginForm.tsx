@@ -7,19 +7,12 @@ import {
   Stack,
   Group,
 } from "@mantine/core";
-import { useForm, hasLength, isNotEmpty } from "@mantine/form";
-import { useQuery } from "@tanstack/react-query";
-import loginUserOptions from "../../queryOptions/authOptions";
-
-function validateInput(input: string) {
-  return (
-    isNotEmpty("This field is required")(input) ||
-    hasLength({ min: 8, max: 20 }, "Must be at least 8-20 characters")(input)
-  );
-}
+import { useForm } from "@mantine/form";
+import { validateInput } from "../../components/forms/formData/validateUtils";
+import { useNavigate } from "react-router-dom";
 
 function LoginForm() {
-  const { data, isPending, error } = useQuery(loginUserOptions());
+  const navigate = useNavigate();
   const form = useForm({
     mode: "uncontrolled", // component isn't re-rendered everytime you enter a character
     initialValues: {
@@ -33,13 +26,16 @@ function LoginForm() {
     },
   });
 
+  const isPending = false;
+
   return (
-    <Stack w="300">
-      {error && <div style={{ color: "red" }}>{error.message}</div>}
+    <Stack w="300" className="fade-in">
+      {/* {error && <div style={{ color: "red" }}>{error.message}</div>} */}
       <form
         onSubmit={form.onSubmit((values) => {
           console.log("Form submitted with values:");
           console.log(values);
+          navigate("/dashboard");
         })}
         style={{ textAlign: "left" }}
       >

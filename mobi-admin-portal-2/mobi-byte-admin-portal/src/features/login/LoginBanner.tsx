@@ -3,7 +3,7 @@ import { Center, Stack, Title } from "@mantine/core";
 
 function LoginBanner() {
   return (
-    <Center>
+    <Center className="fade-in">
       <Stack>
         <img src={logo} alt="Mobi Logi" />
         <Center>

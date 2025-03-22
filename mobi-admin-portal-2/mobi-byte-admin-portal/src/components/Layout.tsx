@@ -1,4 +1,4 @@
-import Sidebar from "./Sidebar";
+import Sidebar from "../features/sidebar/Sidebar";
 import MainContainer from "./MainContainer";
 import { Flex } from "@mantine/core";
 
