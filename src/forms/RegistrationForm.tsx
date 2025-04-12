@@ -22,7 +22,10 @@ export default function RegistrationForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="flex flex-col gap-4 h-full justify-center items-center"
+    >
       <TextInput
         {...register("username", { required: true })}
         placeholder="Username"
@@ -62,7 +65,7 @@ export default function RegistrationForm() {
         error={errors.confirmPassword && "This field is required"}
       />
 
-      <Button type="submit" variant="filled" fullWidth>
+      <Button type="submit" variant="filled">
         Register
       </Button>
     </form>

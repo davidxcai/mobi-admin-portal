@@ -9,11 +9,13 @@ export const Route = createRootRoute({
 // Acting as main layout for the application.
 function RootComponent() {
   return (
-    <main className="flex flex-row justify-center items-center h-screen">
+    <main className="flex flex-row items-center h-screen">
       <Sidebar />
       {/* This is the main content area */}
       {/* <div className="bg-blue-950">Hello "__root"!</div> */}
-      <Outlet />
+      <div className="h-full grow p-12">
+        <Outlet />
+      </div>
     </main>
   );
 }
