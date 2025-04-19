@@ -1,3 +1,11 @@
+import { useForm } from "@mantine/form";
+import { TextInput } from "@mantine/core";
+import { DateTimePicker } from "@mantine/dates";
+
 export function CreateEventForm() {
-  return <h1>Create Event Form</h1>;
+  return (
+    <form>
+      <head>Create Event Form</head>
+    </form>
+  );
 }

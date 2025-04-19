@@ -28,7 +28,7 @@ export function CreateButton({ title, form, onConfirm }: CreateButtonProps) {
       leftSection={<IconPlus size={14} />}
       onClick={openModal}
     >
-      Create
+      {title}
     </Button>
   );
 }
