@@ -4,8 +4,10 @@ import { Html5Qrcode } from "html5-qrcode";
 import { Button } from "@mantine/core";
 import { IconCamera } from "@tabler/icons-react";
 import { notifications } from "@mantine/notifications";
+import { useCurrentEvent } from "../../context/CurrentEventContext";
 
 export function QRScanner() {
+  const { event: currentEvent } = useCurrentEvent();
   const [cameraAvailable, setCameraAvailable] = useState(false);
   const [scanning, setScanning] = useState(false);
   const scannerRef = useRef<Html5Qrcode | null>(null);
@@ -45,7 +47,7 @@ export function QRScanner() {
             },
             showScanRegion: true,
           } as any,
-          async (decodedText) => {
+          async (userID) => {
             // Success callback
 
             // Trigger haptic feedback if available
@@ -56,7 +58,7 @@ export function QRScanner() {
             // Show success notification
             notifications.show({
               title: "QR Code Scanned!",
-              message: decodedText,
+              message: `Checked ${userID} into ${currentEvent?.title}`,
               color: "green",
               autoClose: 3000,
             });
@@ -104,7 +106,7 @@ export function QRScanner() {
         {scanning ? "Scanning..." : "Scan QR Code"}
       </Button>
       {!cameraAvailable && (
-        <p className="text-rose-600">No camera detected on this device</p>
+        <p className="text-rose-400">No camera detected on this device</p>
       )}
       {scanning && <div id={qrRegionId} className="w-full max-w-xs" />}
     </div>
