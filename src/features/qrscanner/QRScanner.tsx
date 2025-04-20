@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Html5Qrcode } from "html5-qrcode";
 import { Button } from "@mantine/core";
 import { IconCamera } from "@tabler/icons-react";
+import { notifications } from "@mantine/notifications";
 
 export function QRScanner() {
   const [cameraAvailable, setCameraAvailable] = useState(false);
@@ -38,11 +39,29 @@ export function QRScanner() {
           {
             fps: 10, // Captures per second
             qrbox: { width: 250, height: 250 }, // Size of the scanning box
-          },
+            aspectRatio: 1.0,
+            experimentalFeatures: {
+              useBarCodeDetectorIfSupported: true, // Modern devices: uses built-in fast scanner
+            },
+            showScanRegion: true,
+          } as any,
           async (decodedText) => {
             // Success callback
-            alert(`Scanned QR Code: ${decodedText}`);
 
+            // Trigger haptic feedback if available
+            if (navigator.vibrate) {
+              navigator.vibrate(200);
+            }
+
+            // Show success notification
+            notifications.show({
+              title: "QR Code Scanned!",
+              message: decodedText,
+              color: "green",
+              autoClose: 3000,
+            });
+
+            // Stop scanning after a successful scan
             try {
               await qrScanner.stop();
             } catch (err) {
