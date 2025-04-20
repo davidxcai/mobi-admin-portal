@@ -9,13 +9,13 @@ export function CheckInButton() {
     <>
       <Drawer
         offset={8}
+        size="100%"
         radius="md"
         opened={opened}
         onClose={close}
-        title="Check-In"
         position="bottom"
-        overlayProps={{ backgroundOpacity: 0.5, blur: 4 }}
       >
+        <h1 className="text-3xl text-center pb-4 font-bold">Check-In</h1>
         <QRScanner />
       </Drawer>
       <Button

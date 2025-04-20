@@ -84,7 +84,9 @@ export function QRScanner() {
       >
         {scanning ? "Scanning..." : "Scan QR Code"}
       </Button>
-
+      {!cameraAvailable && (
+        <p className="text-rose-600">No camera detected on this device</p>
+      )}
       {scanning && <div id={qrRegionId} className="w-full max-w-xs" />}
     </div>
   );
