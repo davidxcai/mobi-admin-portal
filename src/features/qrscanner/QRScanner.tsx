@@ -39,10 +39,18 @@ export function QRScanner() {
             fps: 10, // Captures per second
             qrbox: { width: 250, height: 250 }, // Size of the scanning box
           },
-          (decodedText) => {
+          async (decodedText) => {
+            // Success callback
             alert(`Scanned QR Code: ${decodedText}`);
-            qrScanner.stop();
-            setScanning(false);
+
+            try {
+              await qrScanner.stop();
+            } catch (err) {
+              console.error("Error stopping scanner:", err);
+            } finally {
+              setScanning(false);
+              scannerRef.current = null;
+            }
           },
           (errorMessage) => {
             console.warn(errorMessage);
@@ -59,7 +67,10 @@ export function QRScanner() {
       if (scannerRef.current) {
         scannerRef.current
           .stop()
-          .catch((err) => console.error("Stop failed", err));
+          .catch((err) => console.error("Stop failed", err))
+          .finally(() => {
+            scannerRef.current = null;
+          });
       }
     };
   }, [scanning]);
@@ -71,7 +82,7 @@ export function QRScanner() {
         disabled={scanning || !cameraAvailable}
         leftSection={<IconCamera size={24} />}
       >
-        Scan QR Code
+        {scanning ? "Scanning..." : "Scan QR Code"}
       </Button>
 
       {scanning && <div id={qrRegionId} className="w-full max-w-xs" />}
