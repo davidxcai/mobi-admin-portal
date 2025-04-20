@@ -1,6 +1,7 @@
 import { Button, Drawer } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconCreditCardPay } from "@tabler/icons-react";
+import { QRScanner } from "../qrscanner/QRScanner";
 
 export function CheckInButton() {
   const [opened, { open, close }] = useDisclosure(false);
@@ -15,7 +16,7 @@ export function CheckInButton() {
         position="bottom"
         overlayProps={{ backgroundOpacity: 0.5, blur: 4 }}
       >
-        {/* Drawer content */}
+        <QRScanner />
       </Drawer>
       <Button
         color="blue"

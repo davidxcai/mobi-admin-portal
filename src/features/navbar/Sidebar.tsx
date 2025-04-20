@@ -4,7 +4,7 @@ import Navlinks from "./Navlinks";
 
 export function Sidebar() {
   const location = useLocation();
-  const isLoginPage = ["/login", "/"].includes(location.pathname);
+  const isLoginPage = ["/login", "/", "/register"].includes(location.pathname);
   return (
     <nav
       className={`flex flex-col h-full bg-slate-900 ${isLoginPage ? "w-1/2" : "w-3xs"}`}
