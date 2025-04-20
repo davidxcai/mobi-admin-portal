@@ -1,0 +1,138 @@
+export const chartData = [
+  {
+    date: "Jan 15",
+    members: 1035,
+    new_members: 35,
+    attendance: 992,
+  },
+  {
+    date: "Jan 22",
+    members: 1064,
+    new_members: 29,
+    attendance: 998,
+  },
+  {
+    date: "Jan 29",
+    members: 1093,
+    new_members: 29,
+    attendance: 923,
+  },
+  {
+    date: "Feb 05",
+    members: 1127,
+    new_members: 34,
+    attendance: 838,
+  },
+  {
+    date: "Feb 12",
+    members: 1166,
+    new_members: 39,
+    attendance: 1013,
+  },
+  {
+    date: "Feb 19",
+    members: 1197,
+    new_members: 31,
+    attendance: 1060,
+  },
+  {
+    date: "Feb 26",
+    members: 1242,
+    new_members: 45,
+    attendance: 1226,
+  },
+  {
+    date: "Mar 04",
+    members: 1284,
+    new_members: 42,
+    attendance: 927,
+  },
+  {
+    date: "Mar 11",
+    members: 1323,
+    new_members: 39,
+    attendance: 970,
+  },
+  {
+    date: "Mar 18",
+    members: 1357,
+    new_members: 34,
+    attendance: 1024,
+  },
+  {
+    date: "Mar 25",
+    members: 1397,
+    new_members: 40,
+    attendance: 1103,
+  },
+  {
+    date: "Apr 01",
+    members: 1431,
+    new_members: 34,
+    attendance: 1226,
+  },
+  {
+    date: "Apr 08",
+    members: 1472,
+    new_members: 41,
+    attendance: 1047,
+  },
+  {
+    date: "Apr 15",
+    members: 1503,
+    new_members: 31,
+    attendance: 1423,
+  },
+];
+
+export const eventsData = [
+  {
+    title: "Intro to HTML & CSS",
+    date: "Jan 20, 2025",
+    start: "4:00 PM",
+    end: "6:00 PM",
+    location: "Room 204, Tech Hall",
+  },
+  {
+    title: "JavaScript Fundamentals",
+    date: "Feb 3, 2025",
+    start: "5:00 PM",
+    end: "7:00 PM",
+    location: "Room 210, Innovation Center",
+  },
+  {
+    title: "React Basics Workshop",
+    date: "Feb 17, 2025",
+    start: "3:30 PM",
+    end: "6:00 PM",
+    location: "Room 101, Dev Lab",
+  },
+  {
+    title: "Building a Portfolio Website",
+    date: "Mar 5, 2025",
+    start: "5:00 PM",
+    end: "7:30 PM",
+    location: "Room 305, Design Building",
+  },
+  {
+    title: "Git & GitHub Collaboration",
+    date: "Mar 19, 2025",
+    start: "4:00 PM",
+    end: "6:30 PM",
+    location: "Room 112, Tech Hall",
+  },
+  {
+    title: "Deploying with Netlify",
+    date: "Apr 2, 2025",
+    start: "4:30 PM",
+    end: "6:00 PM",
+    location: "Room 220, Web Studio",
+  },
+  {
+    title: "Fullstack Web Dev Panel",
+    date: "Apr 15, 2025",
+    start: "6:00 PM",
+    end: "8:00 PM",
+    location: "Auditorium A",
+  },
+];
