@@ -17,7 +17,7 @@ export function CreateEventForm() {
   // });
   return (
     <form>
-      <head>Create Event Form</head>
+      <p>Create Event Form</p>
     </form>
   );
 }
