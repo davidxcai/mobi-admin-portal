@@ -4,7 +4,7 @@ import { MobiText } from "./components/MobiText";
 import { MobiLogo } from "./components/MobiLogo";
 import { useDisclosure } from "@mantine/hooks";
 import { Sidebar } from "./features/navbar/Sidebar";
-import { Dashboard, Events, Login, Users, Profile, Settings } from "./pages/";
+import { Dashboard, Events, Users, Profile, Settings } from "./pages/";
 import { Routes, Route } from "react-router-dom";
 
 export function App() {
