@@ -1,11 +1,4 @@
-import {
-  Avatar,
-  Group,
-  Menu,
-  UnstyledButton,
-  Stack,
-  Text,
-} from "@mantine/core";
+import { Avatar, Group, Menu, Stack, Text } from "@mantine/core";
 import {
   IconChevronRight,
   IconSettings,
