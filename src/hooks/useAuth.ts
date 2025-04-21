@@ -1,5 +1,7 @@
 import { supabase } from "./supabaseClient";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Session } from "@supabase/supabase-js";
+import { useEffect, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { notifications } from "@mantine/notifications";
 import { useNavigate } from "react-router-dom";
 
@@ -56,7 +58,6 @@ export function useRegister() {
 
 export function useLogin() {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const loginMutation = useMutation({
     mutationFn: async (credentials: { email: string; password: string }) => {
       const { data, error } = await supabase.auth.signInWithPassword({
@@ -70,8 +71,6 @@ export function useLogin() {
     },
     onSuccess: (data) => {
       console.log("Login successful", data);
-      queryClient.setQueryData(["user"], data.user);
-      queryClient.setQueryData(["session"], data.session);
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -113,6 +112,27 @@ export function useLogout() {
   return logoutMutation;
 }
 
-export function useGetSession() {}
+export function useGetSession() {
+  const [session, setSession] = useState<Session | null>(null);
+  useEffect(() => {
+    const getSession = async () => {
+      const { data } = await supabase.auth.getSession();
+      setSession(data?.session ?? null);
+    };
+    getSession();
+
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setSession(session ?? null);
+      }
+    );
+
+    return () => {
+      listener.subscription.unsubscribe();
+    };
+  }, []);
+
+  return { session };
+}
 
 export function useGetUser() {}
