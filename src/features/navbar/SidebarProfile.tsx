@@ -5,14 +5,16 @@ import {
   IconUser,
   IconLogout,
 } from "@tabler/icons-react";
+import { useLogout } from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 
 export function SidebarProfile() {
+  const { mutate: logout } = useLogout();
   const navigate = useNavigate();
   return (
     <Menu position="right-end" withArrow arrowPosition="center">
       <Menu.Target>
-        <Group className="cursor-pointer">
+        <Group className="cursor-pointer" p="lg">
           <Avatar color="initials" name="David Cai" />
           <Stack gap={0}>
             <Text fw="500">David Cai</Text>
@@ -41,7 +43,7 @@ export function SidebarProfile() {
         <Menu.Item
           leftSection={<IconLogout size={14} />}
           color="red"
-          onClick={() => navigate("/login")}
+          onClick={() => logout()}
         >
           Logout
         </Menu.Item>

@@ -1,4 +1,4 @@
-import { NavLink } from "@mantine/core";
+import { AppShell, NavLink } from "@mantine/core";
 import { useNavigate, useLocation } from "react-router-dom";
 import { IconTableDashed, IconUser, IconCalendar } from "@tabler/icons-react";
 import { SidebarProfile } from "./SidebarProfile";
@@ -26,10 +26,11 @@ export default function Navlinks() {
   });
   return (
     <>
-      {links}
-      <div className="mt-auto">
+      <AppShell.Section p="lg">{links}</AppShell.Section>
+
+      <AppShell.Section className="mt-auto">
         <SidebarProfile />
-      </div>
+      </AppShell.Section>
     </>
   );
 }

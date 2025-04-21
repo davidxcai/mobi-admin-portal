@@ -23,7 +23,7 @@ export function App() {
           <MobiText />
         </Group>
       </AppShell.Header>
-      <AppShell.Navbar p="lg">
+      <AppShell.Navbar>
         <Sidebar />
       </AppShell.Navbar>
       <AppShell.Main>

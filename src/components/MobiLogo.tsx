@@ -3,7 +3,7 @@ import mobiLogo from "../assets/MOBI Logo.svg";
 
 export function MobiLogo() {
   return (
-    <div className="flex flex-col items-center justify-center h-150">
+    <div className="flex flex-col items-center justify-center h-full">
       <img src={mobiLogo} alt="Mobi Byte Logo" />
       <Stack>
         <p className="space-grotesk text-5xl font-bold text-center">
