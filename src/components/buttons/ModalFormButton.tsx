@@ -2,24 +2,20 @@ import { Button } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 import { modals } from "@mantine/modals";
 
-type CreateButtonProps = {
+type ModalFormButtonProps = {
   title: string;
   form: React.ReactNode;
-  onConfirm: () => void;
 };
 
-export function CreateButton({ title, form, onConfirm }: CreateButtonProps) {
+export function ModalFormButton({ title, form }: ModalFormButtonProps) {
   const openModal = () =>
-    modals.openConfirmModal({
+    modals.open({
       title: title,
       size: "sm",
       radius: "md",
       centered: true,
       withCloseButton: true,
       children: form,
-      labels: { confirm: "Create", cancel: "Cancel" },
-      onCancel: () => console.log("Cancel"),
-      onConfirm: onConfirm,
     });
   return (
     <Button

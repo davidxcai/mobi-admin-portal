@@ -7,7 +7,7 @@ export function LoginForm() {
     navigate("/dashboard");
   };
   return (
-    <form className="flex flex-col gap-4 justify-center mx-auto h-full w-90">
+    <form className="flex flex-col gap-4 justify-center mx-auto h-full w-full">
       <h1 className="text-2xl font-bold">Login</h1>
       <input
         type="email"
@@ -19,7 +19,7 @@ export function LoginForm() {
         placeholder="Password"
         className="border border-gray-300 p-2 rounded-md"
       />
-      <Button onClick={handleClick} variant="outline" color="blue">
+      <Button onClick={handleClick} variant="filled" color="indigo">
         Login
       </Button>
     </form>

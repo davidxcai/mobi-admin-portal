@@ -1,19 +1,18 @@
-import { Tabs, Divider } from "@mantine/core";
+import { Tabs, Divider, Stack } from "@mantine/core";
 import { EventsTable, CurrentEvent, CreateEventForm } from "../features/events";
-import { CreateButton, RefreshButton } from "../components/buttons";
+import { ModalFormButton, RefreshButton } from "../components/buttons";
 
 export function Events() {
-  const createEvent = () => {
-    console.log("Event created");
-  };
   const refreshEvents = () => {
     console.log("Refresh events");
+    // replace with hook later
   };
   const refreshCheckins = () => {
     console.log("Refresh check-ins");
+    // replace with hook later
   };
   return (
-    <div className="flex flex-col h-full gap-4">
+    <Stack h="100%" gap="md">
       <strong className="text-3xl">Events</strong>
       <Tabs defaultValue="events">
         <Tabs.List className="mb-4">
@@ -24,10 +23,9 @@ export function Events() {
           <div className="flex justify-between items-center">
             <strong className="text-2xl">Spring 2025</strong>
             <div className="flex gap-4">
-              <CreateButton
+              <ModalFormButton
                 title="Create Event"
                 form={<CreateEventForm />}
-                onConfirm={createEvent}
               />
               <RefreshButton action={refreshEvents} />
             </div>
@@ -44,6 +42,6 @@ export function Events() {
           <EventsTable />
         </Tabs.Panel>
       </Tabs>
-    </div>
+    </Stack>
   );
 }

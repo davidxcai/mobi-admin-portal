@@ -25,20 +25,18 @@ export default function Navlinks() {
   });
   return (
     <>
-      <div className="flex flex-col gap-2 h-full p-4">
-        <div className="p-2">
-          <Text
-            variant="gradient"
-            gradient={{ from: "rgba(41, 176, 255, 1)", to: "#9E83FF", deg: 90 }}
-            fw={700}
-            size="xl"
-          >
-            MOBI BYTE
-          </Text>
-        </div>
-
-        {links}
+      <div className="p-2">
+        <Text
+          variant="gradient"
+          gradient={{ from: "rgba(41, 176, 255, 1)", to: "#9E83FF", deg: 90 }}
+          fw={700}
+          size="xl"
+        >
+          MOBI BYTE
+        </Text>
       </div>
+
+      {links}
       <SidebarProfile />
     </>
   );
