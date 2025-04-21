@@ -1,25 +1,44 @@
-import { Button } from "@mantine/core";
+import { Button, TextInput, PasswordInput } from "@mantine/core";
+import { useForm, isEmail, isNotEmpty } from "@mantine/form";
 import { useNavigate } from "react-router-dom";
 
 export function LoginForm() {
   const navigate = useNavigate();
+
+  const form = useForm({
+    mode: "uncontrolled",
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    validate: {
+      email: isEmail("Invalid email"),
+      password: isNotEmpty("Password is required"),
+    },
+  });
   const handleClick = () => {
+    const credentials = form.getValues();
+    console.log("Login credentials", credentials);
+    // replace with hook later
     navigate("/dashboard");
   };
   return (
-    <form className="flex flex-col gap-4 justify-center mx-auto h-full w-full">
+    <form
+      className="flex flex-col gap-4 justify-center mx-auto h-full w-full"
+      onSubmit={form.onSubmit(handleClick)}
+    >
       <h1 className="text-2xl font-bold">Login</h1>
-      <input
-        type="email"
+      <TextInput
         placeholder="Email"
-        className="border border-gray-300 p-2 rounded-md"
+        {...form.getInputProps("email")}
+        key={form.key("email")}
       />
-      <input
-        type="password"
+      <PasswordInput
         placeholder="Password"
-        className="border border-gray-300 p-2 rounded-md"
+        {...form.getInputProps("password")}
+        key={form.key("password")}
       />
-      <Button onClick={handleClick} variant="filled" color="indigo">
+      <Button type="submit" variant="filled" color="indigo">
         Login
       </Button>
     </form>

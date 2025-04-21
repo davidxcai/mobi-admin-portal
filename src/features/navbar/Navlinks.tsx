@@ -1,4 +1,4 @@
-import { NavLink, Text } from "@mantine/core";
+import { NavLink } from "@mantine/core";
 import { useNavigate, useLocation } from "react-router-dom";
 import { IconTableDashed, IconUser, IconCalendar } from "@tabler/icons-react";
 import { SidebarProfile } from "./SidebarProfile";
@@ -15,6 +15,7 @@ export default function Navlinks() {
   const links = pages.map((page) => {
     return (
       <NavLink
+        className="rounded-md"
         onClick={() => navigate(page.path)}
         leftSection={page.icon}
         key={page.label}
@@ -25,19 +26,10 @@ export default function Navlinks() {
   });
   return (
     <>
-      <div className="p-2">
-        <Text
-          variant="gradient"
-          gradient={{ from: "rgba(41, 176, 255, 1)", to: "#9E83FF", deg: 90 }}
-          fw={700}
-          size="xl"
-        >
-          MOBI BYTE
-        </Text>
-      </div>
-
       {links}
-      <SidebarProfile />
+      <div className="mt-auto">
+        <SidebarProfile />
+      </div>
     </>
   );
 }

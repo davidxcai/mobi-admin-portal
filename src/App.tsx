@@ -1,5 +1,7 @@
 import { CurrentEventProvider } from "./context/CurrentEventContext";
 import { AppShell, Burger, Group } from "@mantine/core";
+import { MobiText } from "./components/MobiText";
+import { MobiLogo } from "./components/MobiLogo";
 import { useDisclosure } from "@mantine/hooks";
 import { Sidebar } from "./features/navbar/Sidebar";
 import { Dashboard, Events, Login, Users, Profile, Settings } from "./pages/";
@@ -11,22 +13,24 @@ export function App() {
     <AppShell
       header={{ height: 60 }}
       navbar={{ width: 270, breakpoint: "sm", collapsed: { mobile: !opened } }}
-      padding="md"
+      transitionDuration={300}
+      transitionTimingFunction="ease"
+      padding="lg"
     >
       <AppShell.Header>
-        <Group h="100%" px="md">
+        <Group h="100%" px="lg">
           <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-          <p>Mobi</p>
+          <MobiText />
         </Group>
       </AppShell.Header>
-      <AppShell.Navbar p="md">
+      <AppShell.Navbar p="lg">
         <Sidebar />
       </AppShell.Navbar>
       <AppShell.Main>
         <CurrentEventProvider>
           <Routes>
-            <Route path="/" element={<h1>Home</h1>} />
-            <Route path="/login" element={<Login />} />
+            <Route path="/" element={<MobiLogo />} />
+            <Route path="/login" element={<MobiLogo />} />
             <Route path="/register" element={<h1>Register</h1>} />
 
             <Route path="/dashboard" element={<Dashboard />} />
