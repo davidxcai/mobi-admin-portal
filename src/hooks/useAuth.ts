@@ -113,26 +113,20 @@ export function useLogout() {
 }
 
 export function useGetSession() {
-  const [session, setSession] = useState<Session | null>(null);
-  useEffect(() => {
-    const getSession = async () => {
-      const { data } = await supabase.auth.getSession();
-      setSession(data?.session ?? null);
-    };
-    getSession();
-
-    const { data: listener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setSession(session ?? null);
+  // Todo: needs a loading/fetching state
+  // implement useQuery for getting session state
+  const getSessionQuery = useQuery({
+    queryKey: ["session"],
+    queryFn: async () => {
+      const { data, error } = await supabase.auth.getSession();
+      if (error) {
+        throw new Error(error.message);
       }
-    );
-
-    return () => {
-      listener.subscription.unsubscribe();
-    };
-  }, []);
-
-  return { session };
+      return data.session;
+    },
+    refetchOnWindowFocus: false,
+  });
+  return getSessionQuery;
 }
 
 export function useGetUser() {}

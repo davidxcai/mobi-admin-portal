@@ -6,12 +6,20 @@ import { useGetSession } from "../hooks/useAuth";
 import { formattedDate } from "../utils/date";
 
 export function Dashboard() {
-  const { session } = useGetSession();
+  const { data: session, isPending, isError, error } = useGetSession();
+  if (isPending) {
+    console.log("Loading session...");
+    return <div>Loading...</div>;
+  }
+  if (isError) {
+    console.error("Error fetching session", error);
+    return <div>Error: {error.message}</div>;
+  }
   if (!session) {
     console.log("No session found");
-  } else {
-    console.log("Session data:", session);
+    return <div>No session found</div>;
   }
+  console.log("Session data", session);
 
   return (
     <div className="flex flex-col h-full gap-4">
