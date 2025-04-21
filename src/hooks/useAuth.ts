@@ -1,6 +1,4 @@
 import { supabase } from "./supabaseClient";
-import { Session } from "@supabase/supabase-js";
-import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { notifications } from "@mantine/notifications";
 import { useNavigate } from "react-router-dom";
@@ -58,6 +56,7 @@ export function useRegister() {
 
 export function useLogin() {
   const navigate = useNavigate();
+
   const loginMutation = useMutation({
     mutationFn: async (credentials: { email: string; password: string }) => {
       const { data, error } = await supabase.auth.signInWithPassword({
@@ -69,8 +68,8 @@ export function useLogin() {
       }
       return data;
     },
-    onSuccess: (data) => {
-      console.log("Login successful", data);
+    onSuccess: () => {
+      console.log("Login successful");
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -113,8 +112,6 @@ export function useLogout() {
 }
 
 export function useGetSession() {
-  // Todo: needs a loading/fetching state
-  // implement useQuery for getting session state
   const getSessionQuery = useQuery({
     queryKey: ["session"],
     queryFn: async () => {
@@ -129,4 +126,17 @@ export function useGetSession() {
   return getSessionQuery;
 }
 
-export function useGetUser() {}
+export function useGetUser() {
+  const getSessionQuery = useQuery({
+    queryKey: ["user"],
+    queryFn: async () => {
+      const { data, error } = await supabase.auth.getUser();
+      if (error) {
+        throw new Error(error.message);
+      }
+      return data.user;
+    },
+    refetchOnWindowFocus: false,
+  });
+  return getSessionQuery;
+}

@@ -1,47 +1,48 @@
-// src/providers/AuthProvider.tsx
-import { createContext, useContext, useEffect, useState } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Session, User } from "@supabase/supabase-js";
-import { supabase } from "../hooks/supabaseClient";
-import { useLogout } from "../hooks/useAuth";
+import { createContext, useContext, useEffect } from "react";
+import { Session } from "@supabase/supabase-js";
+import { useGetSession } from "../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
+import { notifications } from "@mantine/notifications";
 
-const getSession = async () => {
-  const { data, error } = await supabase.auth.getSession();
-  if (error) throw error;
-  return data.session;
-};
+const AuthContext = createContext<Session | null>(null);
 
-export const useAuth = () => {
-  const queryClient = useQueryClient();
-
-  const {
-    data: session,
-    isLoading,
-    error,
-  } = useQuery({
-    queryKey: ["session"],
-    queryFn: getSession,
-    staleTime: 1000 * 60 * 5, // session stays fresh for 5 minutes
-    refetchOnWindowFocus: true,
-  });
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const { data: session, isPending: sessionPending, isError } = useGetSession();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const { data: listener } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        console.log("Supabase auth event:", event);
-        queryClient.setQueryData(["session"], session);
-      }
-    );
+    if (sessionPending) {
+      return;
+    } else if (!session && !sessionPending) {
+      navigate("/login");
+      notifications.show({
+        title: "Not authenticated",
+        message: "Please log in again.",
+        color: "red",
+      });
+    }
+  }, [session, sessionPending, navigate]);
 
-    return () => {
-      listener.subscription.unsubscribe();
-    };
-  }, [queryClient]);
+  if (sessionPending) {
+    return <div>Loading...</div>;
+  }
 
-  return {
-    session,
-    user: session?.user ?? null,
-    isLoading,
-    error,
-  };
-};
+  if (isError) {
+    console.error("Error fetching session:", isError);
+    return <div>Error fetching session</div>;
+  }
+
+  return (
+    <AuthContext.Provider value={session ?? null}>
+      {children}
+    </AuthContext.Provider>
+  );
+}
+
+export function useAuth() {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
+}
