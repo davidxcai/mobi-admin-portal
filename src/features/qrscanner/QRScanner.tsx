@@ -7,9 +7,11 @@ import { notifications } from "@mantine/notifications";
 import { useCurrentEvent } from "../../context/CurrentEventContext";
 import { useCameraAvailable } from "./QRCameraAvailable";
 import { useCreateCheckIn } from "../../hooks";
+import { useAuth } from "../../providers/AuthProvider";
 
 export function QRScanner() {
   const { event: currentEvent } = useCurrentEvent();
+  const { session } = useAuth();
   const { mutate: createCheckIn } = useCreateCheckIn();
   const cameraAvailable = useCameraAvailable();
   const [scanning, setScanning] = useState(false);
@@ -33,20 +35,33 @@ export function QRScanner() {
             },
             showScanRegion: true,
           } as any,
-          async (userId) => {
+          async (profileId) => {
             // Success callback
 
             // Trigger haptic feedback if available
             if (navigator.vibrate) {
               navigator.vibrate(200);
             }
+            if (!session?.user) {
+              throw new Error("User not logged in");
+            }
 
-            createCheckIn(userId);
+            if (!currentEvent) {
+              throw new Error("Event not found");
+            }
+
+            const data = {
+              profileId,
+              event: currentEvent,
+              user: session?.user,
+            };
+
+            createCheckIn(data);
 
             // Show success notification
             notifications.show({
               title: "QR Code Scanned!",
-              message: `Checked ${userId} into ${currentEvent?.title}`,
+              message: `Checked ${profileId} into ${currentEvent?.title}`,
               color: "green",
               autoClose: 3000,
             });

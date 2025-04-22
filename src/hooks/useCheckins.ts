@@ -3,7 +3,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { notifications } from "@mantine/notifications";
 import { CheckInData } from "../types/models";
 import { useCurrentEvent } from "../context/CurrentEventContext";
-import { useAuth } from "../providers/AuthProvider";
+import { Event } from "../types/models";
+import { User } from "@supabase/supabase-js";
 
 export function useGetEventCheckIns() {
   const { event } = useCurrentEvent();
@@ -35,10 +36,17 @@ export function useGetEventCheckIns() {
 
 export function useCreateCheckIn() {
   const queryClient = useQueryClient();
-  const { event } = useCurrentEvent();
-  const { profile: user } = useAuth();
+
   const createCheckInMutation = useMutation({
-    mutationFn: async (profileId: string) => {
+    mutationFn: async ({
+      profileId,
+      event,
+      user,
+    }: {
+      profileId: string;
+      event: Event;
+      user: User;
+    }) => {
       if (!event) {
         throw new Error("Event not found");
       }
@@ -48,7 +56,7 @@ export function useCreateCheckIn() {
       const { data, error } = await supabase
         .from("checkins")
         .insert({
-          event_id: event?.id,
+          event_id: event.id,
           profile_id: profileId,
           momocoins: event?.momocoins ?? 0,
           checked_in_by: user?.id,
