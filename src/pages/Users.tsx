@@ -1,23 +1,21 @@
 import { Tabs } from "@mantine/core";
-import { EventsTable } from "../features/events/EventsTable";
 import { RefreshButton } from "../components/buttons";
 import { ModalFormButton } from "../components/buttons";
 import { CreateUserForm } from "../features/users";
+import { UsersTable, PendingUsersTable } from "../features/users/";
+import { useGetAllProfiles } from "../hooks/useProfiles";
 
 export function Users() {
-  const refreshUsers = () => {
-    console.log("Refresh users");
-    // replace with hook later
-  };
+  const { refetch } = useGetAllProfiles();
   return (
     <div className="flex flex-col h-full gap-4">
       <strong className="text-3xl">Users</strong>
-      <Tabs defaultValue="events">
+      <Tabs defaultValue="users">
         <Tabs.List className="mb-4">
-          <Tabs.Tab value="events">Current Users</Tabs.Tab>
-          <Tabs.Tab value="checkins">Pending</Tabs.Tab>
+          <Tabs.Tab value="users">Current Users</Tabs.Tab>
+          <Tabs.Tab value="pending">Pending</Tabs.Tab>
         </Tabs.List>
-        <Tabs.Panel value="events">
+        <Tabs.Panel value="users">
           <div className="flex justify-between items-center">
             <strong className="text-2xl">Spring 2025</strong>
             <div className="flex gap-4">
@@ -25,13 +23,13 @@ export function Users() {
                 title="Create New User"
                 form={<CreateUserForm />}
               />
-              <RefreshButton action={refreshUsers} />
+              <RefreshButton action={refetch} />
             </div>
           </div>
-          <EventsTable />
+          <UsersTable />
         </Tabs.Panel>
-        <Tabs.Panel value="checkins">
-          <EventsTable />
+        <Tabs.Panel value="pending">
+          <PendingUsersTable />
         </Tabs.Panel>
       </Tabs>
     </div>

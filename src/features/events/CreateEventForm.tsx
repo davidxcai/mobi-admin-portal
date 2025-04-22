@@ -2,15 +2,18 @@ import { useForm, isNotEmpty } from "@mantine/form";
 import { TextInput, NumberInput, Button } from "@mantine/core";
 import { DateTimePicker } from "@mantine/dates";
 import { modals } from "@mantine/modals";
-import { notifications } from "@mantine/notifications";
+import { useCreateEvent } from "../../hooks/useEvents";
+import { useGetUser } from "../../hooks/useAuth";
 
 export function CreateEventForm() {
+  const { mutate: createEvent } = useCreateEvent();
+  const { data: user } = useGetUser();
   const form = useForm({
     initialValues: {
       title: "",
       location: "",
-      startDate: new Date(),
-      endDate: new Date(),
+      starts_at: new Date(),
+      ends_at: new Date(),
       momocoins: 1,
     },
 
@@ -18,16 +21,17 @@ export function CreateEventForm() {
       title: isNotEmpty("Title is required"),
     },
   });
+
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    console.log(form.getValues());
+    const newEvent = {
+      ...form.getValues(),
+      created_by: user?.id || "Unknown User",
+    };
+    createEvent(newEvent);
     modals.closeAll();
-    notifications.show({
-      title: "Event Successfully Created",
-      message: `Event title: ${form.getValues().title}`,
-      color: "green",
-    });
   };
+
   return (
     <form onSubmit={handleSubmit}>
       <TextInput
@@ -43,12 +47,12 @@ export function CreateEventForm() {
       <DateTimePicker
         label="Start Date"
         placeholder="Pick start date"
-        {...form.getInputProps("startDate")}
+        {...form.getInputProps("starts_at")}
       />
       <DateTimePicker
         label="End Date"
         placeholder="Pick end date"
-        {...form.getInputProps("endDate")}
+        {...form.getInputProps("ends_at")}
       />
       <NumberInput
         label="Momocoins"

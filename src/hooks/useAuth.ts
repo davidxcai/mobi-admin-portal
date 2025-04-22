@@ -1,10 +1,12 @@
 import { supabase } from "./supabaseClient";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+// import { useCreateProfile } from "./useProfiles";
 import { notifications } from "@mantine/notifications";
 import { useNavigate } from "react-router-dom";
 
 export function useRegister() {
   const navigate = useNavigate();
+  // const { mutate : createProfile } = useCreateProfile();
   const registerMutation = useMutation({
     mutationFn: async (credentials: {
       email: string;
@@ -23,6 +25,7 @@ export function useRegister() {
         throw new Error(signUpError.message);
       }
       console.log("User signed up", user);
+
       const { error: profileError } = await supabase.from("profiles").insert({
         id: user?.id,
         first_name: credentials.first_name,
@@ -56,7 +59,7 @@ export function useRegister() {
 
 export function useLogin() {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
+
   const loginMutation = useMutation({
     mutationFn: async (credentials: { email: string; password: string }) => {
       const { data, error } = await supabase.auth.signInWithPassword({
@@ -68,10 +71,8 @@ export function useLogin() {
       }
       return data;
     },
-    onSuccess: (data) => {
-      console.log("Login successful", data);
-      queryClient.setQueryData(["user"], data.user);
-      queryClient.setQueryData(["session"], data.session);
+    onSuccess: () => {
+      console.log("Login successful");
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -113,6 +114,32 @@ export function useLogout() {
   return logoutMutation;
 }
 
-export function useGetSession() {}
+export function useGetSession() {
+  const getSessionQuery = useQuery({
+    queryKey: ["session"],
+    queryFn: async () => {
+      const { data, error } = await supabase.auth.getSession();
+      if (error) {
+        throw new Error(error.message);
+      }
+      return data.session;
+    },
+    refetchOnWindowFocus: false,
+  });
+  return getSessionQuery;
+}
 
-export function useGetUser() {}
+export function useGetUser() {
+  const getSessionQuery = useQuery({
+    queryKey: ["user"],
+    queryFn: async () => {
+      const { data, error } = await supabase.auth.getUser();
+      if (error) {
+        throw new Error(error.message);
+      }
+      return data.user;
+    },
+    refetchOnWindowFocus: false,
+  });
+  return getSessionQuery;
+}

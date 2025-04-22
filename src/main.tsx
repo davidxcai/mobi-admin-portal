@@ -15,6 +15,7 @@ import { BrowserRouter } from "react-router-dom";
 
 // TanStack Query
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 const queryClient = new QueryClient();
 
 // Render the app
@@ -32,6 +33,7 @@ if (!rootElement.innerHTML) {
             </ModalsProvider>
           </MantineProvider>
         </BrowserRouter>
+        <ReactQueryDevtools initialIsOpen={false} buttonPosition="top-right" />
       </QueryClientProvider>
     </StrictMode>
   );
