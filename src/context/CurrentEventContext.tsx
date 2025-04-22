@@ -5,7 +5,7 @@ import {
   useEffect,
   ReactNode,
 } from "react";
-import { Event } from "../types/models/EventModel";
+import { Event } from "../types/models";
 import { notifications } from "@mantine/notifications";
 
 interface CurrentEventContextProps {

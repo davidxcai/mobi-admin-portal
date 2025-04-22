@@ -1,10 +1,12 @@
 import { supabase } from "./supabaseClient";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+// import { useCreateProfile } from "./useProfiles";
 import { notifications } from "@mantine/notifications";
 import { useNavigate } from "react-router-dom";
 
 export function useRegister() {
   const navigate = useNavigate();
+  // const { mutate : createProfile } = useCreateProfile();
   const registerMutation = useMutation({
     mutationFn: async (credentials: {
       email: string;
@@ -23,6 +25,7 @@ export function useRegister() {
         throw new Error(signUpError.message);
       }
       console.log("User signed up", user);
+
       const { error: profileError } = await supabase.from("profiles").insert({
         id: user?.id,
         first_name: credentials.first_name,

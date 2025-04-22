@@ -1,13 +1,13 @@
 export interface Event {
   id: string;
   created_at: string;
-  create_by: string;
+  created_by: string;
   title: string;
   location: string;
   momocoins: number;
   attendance: number;
-  starts_at: string;
-  ends_at: string;
+  starts_at: Date;
+  ends_at: Date;
   semester: string;
 }
 
@@ -21,13 +21,13 @@ export interface CheckIn {
 }
 
 export interface Profile {
-  id: string;
-  created_at: string;
+  id: string | null;
+  created_at: string | null;
   first_name: string;
   last_name: string;
-  username: string;
+  username: string | null;
   momocoins: number;
-  role: string;
-  account_status: string;
-  active: boolean;
+  role: string | "user";
+  account_status: string | "pending";
+  active: boolean | true;
 }
