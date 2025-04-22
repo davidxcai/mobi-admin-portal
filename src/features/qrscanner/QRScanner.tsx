@@ -50,6 +50,16 @@ export function QRScanner() {
               color: "green",
               autoClose: 3000,
             });
+            if (scannerRef.current) {
+              await scannerRef.current.stop();
+              scannerRef.current = null;
+            }
+            setScanning(false);
+
+            // Restart scanning after 5 seconds
+            setTimeout(() => {
+              setScanning(true);
+            }, 5000);
           },
           (errorMessage) => {
             console.warn(errorMessage);
