@@ -12,7 +12,7 @@ export function useGetAllProfiles() {
       if (error) {
         throw new Error(error.message);
       }
-      return data as Profile[];
+      return (data as Profile[]) || [];
     },
     refetchOnWindowFocus: false,
   });

@@ -14,7 +14,7 @@ export interface Event {
 export interface CheckIn {
   id: string;
   event_id: string;
-  created_at: string;
+  created_at: Date;
   checked_in_by: string;
   profile_id: string;
   momocoins: number;
@@ -22,7 +22,7 @@ export interface CheckIn {
 
 export interface Profile {
   id: string | null;
-  created_at: string | null;
+  created_at: Date;
   first_name: string;
   last_name: string;
   username: string | null;
