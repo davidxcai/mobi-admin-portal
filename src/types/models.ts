@@ -31,3 +31,8 @@ export interface Profile {
   account_status: string | "pending";
   active: boolean | true;
 }
+
+export type CheckInData = CheckIn & {
+  profiles: Profile;
+  checked_in_by: Profile;
+};

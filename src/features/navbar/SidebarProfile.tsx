@@ -5,13 +5,14 @@ import {
   IconUser,
   IconLogout,
 } from "@tabler/icons-react";
-import { useGetUserProfile } from "../../hooks/useProfiles";
 import { useLogout } from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../providers/AuthProvider";
 
 export function SidebarProfile() {
-  const { data: user, isPending } = useGetUserProfile();
-  const name = isPending ? "Loading" : `${user?.first_name} ${user?.last_name}`;
+  const { profile: user } = useAuth();
+  const name = `${user?.first_name} ${user?.last_name}`;
+
   const { mutate: logout } = useLogout();
   const navigate = useNavigate();
   return (

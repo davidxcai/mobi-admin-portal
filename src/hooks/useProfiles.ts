@@ -2,7 +2,6 @@ import { supabase } from "./supabaseClient";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { notifications } from "@mantine/notifications";
 import { Profile } from "../types/models";
-import { useGetUser } from "./useAuth";
 
 export function useGetAllProfiles() {
   const getAllProfilesQuery = useQuery({
@@ -19,15 +18,15 @@ export function useGetAllProfiles() {
   return getAllProfilesQuery;
 }
 
-export function useGetUserProfile() {
-  const { data: user } = useGetUser();
+export function useGetUserProfile(userId: string) {
+  console.log("Fetching user profile for ID:", userId);
   const getProfileQuery = useQuery({
     queryKey: ["profile"],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("profiles")
         .select("*")
-        .eq("id", user?.id)
+        .eq("id", userId)
         .single();
       if (error) {
         throw new Error(error.message);
@@ -46,7 +45,7 @@ export function useGetAllPendingProfiles() {
       const { data, error } = await supabase
         .from("profiles")
         .select("*")
-        .eq("status", "pending");
+        .eq("account_status", "pending");
       if (error) {
         throw new Error(error.message);
       }

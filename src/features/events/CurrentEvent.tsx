@@ -45,12 +45,12 @@ export function CurrentEvent() {
 
           <Table.Tr>
             <Table.Th>Start Time</Table.Th>
-            <Table.Td>{event.starts_at}</Table.Td>
+            <Table.Td>{event.starts_at.toString()}</Table.Td>
           </Table.Tr>
 
           <Table.Tr>
             <Table.Th>End Time</Table.Th>
-            <Table.Td>{event.ends_at}</Table.Td>
+            <Table.Td>{event.ends_at.toString()}</Table.Td>
           </Table.Tr>
 
           <Table.Tr>

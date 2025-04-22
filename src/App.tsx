@@ -1,5 +1,4 @@
 import { CurrentEventProvider } from "./context/CurrentEventContext";
-import { AuthProvider } from "./providers/AuthProvider";
 import { AppShell, Burger, Group } from "@mantine/core";
 import { MobiText } from "./components/MobiText";
 import { MobiLogo } from "./components/MobiLogo";
@@ -7,6 +6,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { Sidebar } from "./features/navbar/Sidebar";
 import { Dashboard, Events, Users, Profile, Settings } from "./pages/";
 import { Routes, Route, Outlet } from "react-router-dom";
+import { ProtectedRoutes } from "./providers/ProtectedRoutes";
 
 export function App() {
   const [opened, { toggle }] = useDisclosure();
@@ -38,9 +38,9 @@ export function App() {
             {/* Authenticated routes */}
             <Route
               element={
-                <AuthProvider>
+                <ProtectedRoutes>
                   <Outlet />
-                </AuthProvider>
+                </ProtectedRoutes>
               }
             >
               <Route path="/dashboard" element={<Dashboard />} />

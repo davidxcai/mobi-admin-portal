@@ -5,30 +5,16 @@ import { Button } from "@mantine/core";
 import { IconCamera } from "@tabler/icons-react";
 import { notifications } from "@mantine/notifications";
 import { useCurrentEvent } from "../../context/CurrentEventContext";
+import { useCameraAvailable } from "./QRCameraAvailable";
+import { useCreateCheckIn } from "../../hooks";
 
 export function QRScanner() {
   const { event: currentEvent } = useCurrentEvent();
-  const [cameraAvailable, setCameraAvailable] = useState(false);
+  const { mutate: createCheckIn } = useCreateCheckIn();
+  const cameraAvailable = useCameraAvailable();
   const [scanning, setScanning] = useState(false);
   const scannerRef = useRef<Html5Qrcode | null>(null);
   const qrRegionId = "qr-reader";
-
-  useEffect(() => {
-    async function checkCamera() {
-      const available = await hasCamera();
-      setCameraAvailable(available);
-    }
-
-    checkCamera();
-  }, []);
-
-  async function hasCamera(): Promise<boolean> {
-    if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
-      return false;
-    }
-    const devices = await navigator.mediaDevices.enumerateDevices();
-    return devices.some((device) => device.kind === "videoinput");
-  }
 
   useEffect(() => {
     if (scanning) {
@@ -47,7 +33,7 @@ export function QRScanner() {
             },
             showScanRegion: true,
           } as any,
-          async (userID) => {
+          async (userId) => {
             // Success callback
 
             // Trigger haptic feedback if available
@@ -55,23 +41,15 @@ export function QRScanner() {
               navigator.vibrate(200);
             }
 
+            createCheckIn(userId);
+
             // Show success notification
             notifications.show({
               title: "QR Code Scanned!",
-              message: `Checked ${userID} into ${currentEvent?.title}`,
+              message: `Checked ${userId} into ${currentEvent?.title}`,
               color: "green",
               autoClose: 3000,
             });
-
-            // Stop scanning after a successful scan
-            try {
-              await qrScanner.stop();
-            } catch (err) {
-              console.error("Error stopping scanner:", err);
-            } finally {
-              setScanning(false);
-              scannerRef.current = null;
-            }
           },
           (errorMessage) => {
             console.warn(errorMessage);

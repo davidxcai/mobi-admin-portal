@@ -3,6 +3,9 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 // import { useCreateProfile } from "./useProfiles";
 import { notifications } from "@mantine/notifications";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Profile } from "../types/models";
+import { Session } from "@supabase/supabase-js";
 
 export function useRegister() {
   const navigate = useNavigate();
@@ -59,7 +62,7 @@ export function useRegister() {
 
 export function useLogin() {
   const navigate = useNavigate();
-
+  const queryClient = useQueryClient();
   const loginMutation = useMutation({
     mutationFn: async (credentials: { email: string; password: string }) => {
       const { data, error } = await supabase.auth.signInWithPassword({
@@ -71,8 +74,16 @@ export function useLogin() {
       }
       return data;
     },
-    onSuccess: () => {
-      console.log("Login successful");
+    onSuccess: async (data) => {
+      const { data: profile, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", data.user?.id)
+        .single();
+      if (error) {
+        throw new Error(error.message);
+      }
+      queryClient.setQueryData(["profile"], profile as Profile);
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -142,4 +153,50 @@ export function useGetUser() {
     refetchOnWindowFocus: false,
   });
   return getSessionQuery;
+}
+
+export function useAuthSync() {
+  const [session, setSession] = useState<Session | null>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setLoading(false);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      setSession(session);
+      if (_event === "INITIAL_SESSION" && session) {
+        const { data: profileData, error } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", session.user.id)
+          .single();
+        if (error) {
+          throw new Error(error.message);
+        }
+        setProfile(profileData);
+      } else if (_event === "SIGNED_IN") {
+        notifications.show({
+          title: "Welcome back!",
+          message: "You have successfully signed in.",
+          color: "green",
+        });
+      } else if (_event === "SIGNED_OUT") {
+        notifications.show({
+          title: "Signed out!",
+          message: "You have successfully signed out.",
+          color: "blue",
+        });
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  return { session, profile, loading };
 }

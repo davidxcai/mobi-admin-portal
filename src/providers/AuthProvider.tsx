@@ -1,39 +1,27 @@
-import { createContext, useContext, useEffect } from "react";
+import { createContext, useContext } from "react";
 import { Session } from "@supabase/supabase-js";
-import { useGetSession } from "../hooks/useAuth";
-import { useNavigate } from "react-router-dom";
-import { notifications } from "@mantine/notifications";
+import { Profile } from "../types/models";
+import { useAuthSync } from "../hooks/useAuth";
 
-const AuthContext = createContext<Session | null>(null);
+type AuthContextType = {
+  session: Session | null;
+  profile: Profile | null;
+};
+
+const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const { data: session, isPending: sessionPending, isError } = useGetSession();
-  const navigate = useNavigate();
+  // Synchronizes your session with supabase
+  // Updates automatically when the session changes
+  const { session, profile, loading } = useAuthSync();
 
-  useEffect(() => {
-    if (sessionPending) {
-      return;
-    } else if (!session && !sessionPending) {
-      navigate("/login");
-      notifications.show({
-        title: "Not authenticated",
-        message: "Please log in again.",
-        color: "red",
-      });
-    }
-  }, [session, sessionPending, navigate]);
-
-  if (sessionPending) {
-    return <div>Loading...</div>;
-  }
-
-  if (isError) {
-    console.error("Error fetching session:", isError);
-    return <div>Error fetching session</div>;
+  if (loading) {
+    //Possibly load skeleton
+    return <div>Loading auth...</div>;
   }
 
   return (
-    <AuthContext.Provider value={session ?? null}>
+    <AuthContext.Provider value={{ session, profile }}>
       {children}
     </AuthContext.Provider>
   );

@@ -1,5 +1,10 @@
 import { Tabs, Divider, Stack } from "@mantine/core";
-import { EventsTable, CurrentEvent, CreateEventForm } from "../features/events";
+import {
+  EventsTable,
+  CheckInsTable,
+  CurrentEvent,
+  CreateEventForm,
+} from "../features/events";
 import { ModalFormButton, RefreshButton } from "../components/buttons";
 
 export function Events() {
@@ -39,7 +44,7 @@ export function Events() {
             <strong className="text-2xl">Check-Ins</strong>
             <RefreshButton action={refreshCheckins} />
           </div>
-          <EventsTable />
+          <CheckInsTable />
         </Tabs.Panel>
       </Tabs>
     </Stack>
