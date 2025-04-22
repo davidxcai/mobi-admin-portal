@@ -39,12 +39,18 @@ export function useCreateCheckIn() {
   const { profile: user } = useAuth();
   const createCheckInMutation = useMutation({
     mutationFn: async (profileId: string) => {
+      if (!event) {
+        throw new Error("Event not found");
+      }
+      if (!user) {
+        throw new Error("User not found");
+      }
       const { data, error } = await supabase
         .from("checkins")
         .insert({
           event_id: event?.id,
           profile_id: profileId,
-          momocoins: event?.momocoins,
+          momocoins: event?.momocoins ?? 0,
           checked_in_by: user?.id,
         })
         .select()
