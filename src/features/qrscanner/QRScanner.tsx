@@ -12,7 +12,12 @@ import { useAuth } from "../../providers/AuthProvider";
 export function QRScanner() {
   const { event: currentEvent } = useCurrentEvent();
   const { session } = useAuth();
-  const { mutate: createCheckIn } = useCreateCheckIn();
+  const {
+    mutate: createCheckIn,
+    isPending,
+    isError,
+    error,
+  } = useCreateCheckIn();
   const cameraAvailable = useCameraAvailable();
   const [scanning, setScanning] = useState(false);
   const scannerRef = useRef<Html5Qrcode | null>(null);
@@ -58,6 +63,19 @@ export function QRScanner() {
 
             createCheckIn(data);
 
+            if (isPending) {
+              console.log("Creating check-in...");
+            }
+            if (isError) {
+              console.error("Error creating check-in:", error);
+              notifications.show({
+                title: "Error",
+                message: "Failed to create check-in",
+                color: "red",
+                autoClose: 3000,
+              });
+            }
+
             // Show success notification
             notifications.show({
               title: "QR Code Scanned!",
@@ -72,9 +90,9 @@ export function QRScanner() {
             setScanning(false);
 
             // Restart scanning after 5 seconds
-            setTimeout(() => {
-              setScanning(true);
-            }, 5000);
+            // setTimeout(() => {
+            //   setScanning(true);
+            // }, 5000);
           },
           (errorMessage) => {
             console.warn(errorMessage);

@@ -53,6 +53,10 @@ export function useCreateCheckIn() {
       if (!user) {
         throw new Error("User not found");
       }
+      console.log(event);
+      console.log(user);
+      console.log(profileId);
+
       const { data, error } = await supabase
         .from("checkins")
         .insert({
@@ -61,9 +65,8 @@ export function useCreateCheckIn() {
           momocoins: event?.momocoins ?? 0,
           checked_in_by: user?.id,
         })
-        .select()
-        .single();
       if (error) {
+        console.log("hook error", error);
         throw new Error(error.message);
       }
       return data;

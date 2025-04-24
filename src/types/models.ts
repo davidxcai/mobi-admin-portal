@@ -20,6 +20,12 @@ export interface CheckIn {
   momocoins: number;
 }
 
+export type CheckInData = CheckIn & {
+  profile: Profile;
+  checked_in_by_profile: Profile;
+};
+
+
 export interface Profile {
   id: string | null;
   created_at: Date;
@@ -32,7 +38,3 @@ export interface Profile {
   active: boolean | true;
 }
 
-export type CheckInData = CheckIn & {
-  profiles: Profile;
-  checked_in_by: Profile;
-};

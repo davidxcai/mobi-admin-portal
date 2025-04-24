@@ -17,16 +17,20 @@ export function CheckInsTable() {
   if (checkins.length === 0) {
     return <div>No check-ins found</div>;
   }
+  console.log(checkins);
+
+  // return <div>Testing</div>;
 
   const rows = checkins.map((checkin) => (
     <Table.Tr key={checkin.id} className="cursor-pointer">
       <Table.Td>
-        {checkin.profiles.first_name} {checkin.profiles.last_name}
+        {checkin.profile.first_name} {checkin.profile.last_name}
       </Table.Td>
       <Table.Td>{checkin.created_at.toString()}</Table.Td>
       <Table.Td>{checkin.momocoins}</Table.Td>
       <Table.Td>
-        {checkin.checked_in_by.first_name} {checkin.checked_in_by.last_name}
+        {checkin.checked_in_by_profile.first_name}{" "}
+        {checkin.checked_in_by_profile.last_name}
       </Table.Td>
       <Table.Td>
         <Button size="compact-xs" color="blue">
