@@ -7,6 +7,7 @@ import {
 } from "react";
 import { Event } from "../types/models";
 import { notifications } from "@mantine/notifications";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface CurrentEventContextProps {
   event: Event | null;
@@ -22,6 +23,7 @@ interface CurrentEventProviderProps {
 }
 
 export function CurrentEventProvider({ children }: CurrentEventProviderProps) {
+  const queryClient = useQueryClient();
   const [event, setEvent] = useState<Event | null>(null);
 
   useEffect(() => {
@@ -47,6 +49,7 @@ export function CurrentEventProvider({ children }: CurrentEventProviderProps) {
         color: "blue",
       });
     }
+    queryClient.invalidateQueries({ queryKey: ["checkins"] });
     setEvent(event);
   };
 
