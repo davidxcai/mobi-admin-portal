@@ -14,6 +14,7 @@ import "@mantine/notifications/styles.css";
 
 // React Router
 import { BrowserRouter } from "react-router-dom";
+import "./styles.css";
 
 // TanStack Query
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -26,24 +27,27 @@ import { AuthProvider } from "./providers/AuthProvider";
 // Render the app
 const rootElement = document.getElementById("root")!;
 if (!rootElement.innerHTML) {
-  const root = ReactDOM.createRoot(rootElement);
-  root.render(
-    <StrictMode>
-      <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <AuthProvider>
-            <MantineProvider defaultColorScheme="dark">
-              <Notifications />
-              <ModalsProvider>
-                <App />
-              </ModalsProvider>
-            </MantineProvider>
-          </AuthProvider>
-        </BrowserRouter>
-        <ReactQueryDevtools initialIsOpen={false} buttonPosition="top-right" />
-      </QueryClientProvider>
-    </StrictMode>
-  );
+    const root = ReactDOM.createRoot(rootElement);
+    root.render(
+        <StrictMode>
+            <QueryClientProvider client={queryClient}>
+                <BrowserRouter>
+                    <AuthProvider>
+                        <MantineProvider defaultColorScheme="dark">
+                            <Notifications />
+                            <ModalsProvider>
+                                <App />
+                            </ModalsProvider>
+                        </MantineProvider>
+                    </AuthProvider>
+                </BrowserRouter>
+                <ReactQueryDevtools
+                    initialIsOpen={false}
+                    buttonPosition="top-right"
+                />
+            </QueryClientProvider>
+        </StrictMode>
+    );
 }
 
 // Guidelines for app structure:
