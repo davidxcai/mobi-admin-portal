@@ -2,41 +2,48 @@ import { CurrentEventProvider } from "./context/CurrentEventContext";
 import { AppShell, Burger, Group } from "@mantine/core";
 import { MobiText } from "./components/MobiText";
 import { MobiLogo } from "./components/MobiLogo";
-import { useDisclosure } from "@mantine/hooks";
+import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { Sidebar } from "./features/navbar/Sidebar";
 import { Dashboard, Events, Users, Profile, Settings } from "./pages/";
-import { Routes, Route, Outlet } from "react-router-dom";
+import { Routes, Route, Outlet, useLocation } from "react-router-dom";
 import { ProtectedRoutes } from "./providers/ProtectedRoutes";
 
 export function App() {
     const [opened, { toggle }] = useDisclosure();
+    const location = useLocation();
+    const isWideNavbarPage = ["/", "/login", "/register"].includes(
+        location.pathname
+    );
+    const isMobile = useMediaQuery("(max-width: 768px)");
     return (
         <AppShell
-            header={{ height: 60 }}
+            header={isMobile ? { height: 60 } : undefined}
             navbar={{
-                width: 300,
+                width: isWideNavbarPage ? 500 : 300,
                 breakpoint: "sm",
                 collapsed: { mobile: !opened },
             }}
             transitionDuration={300}
             transitionTimingFunction="ease"
-            padding="lg"
+            padding="xl"
         >
-            <AppShell.Header>
-                <Group h="100%" px="lg">
-                    <Burger
-                        opened={opened}
-                        onClick={toggle}
-                        hiddenFrom="sm"
-                        size="sm"
-                    />
-                    <MobiText />
-                </Group>
-            </AppShell.Header>
+            {isMobile && (
+                <AppShell.Header>
+                    <Group h="100%" px="lg">
+                        <Burger
+                            opened={opened}
+                            onClick={toggle}
+                            hiddenFrom="sm"
+                            size="sm"
+                        />
+                        <MobiText />
+                    </Group>
+                </AppShell.Header>
+            )}
             <AppShell.Navbar>
                 <Sidebar />
             </AppShell.Navbar>
-            <AppShell.Main className="h-full">
+            <AppShell.Main className="flex flex-col flex-1 overflow-auto">
                 <CurrentEventProvider>
                     <Routes>
                         <Route path="/" element={<MobiLogo />} />

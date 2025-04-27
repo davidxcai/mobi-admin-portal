@@ -11,6 +11,7 @@ import "@mantine/core/styles.css";
 import "@mantine/charts/styles.css";
 import "@mantine/dates/styles.css";
 import "@mantine/notifications/styles.css";
+import { theme } from "./theme/AppTheme";
 
 // React Router
 import { BrowserRouter } from "react-router-dom";
@@ -33,7 +34,10 @@ if (!rootElement.innerHTML) {
             <QueryClientProvider client={queryClient}>
                 <BrowserRouter>
                     <AuthProvider>
-                        <MantineProvider defaultColorScheme="dark">
+                        <MantineProvider
+                            defaultColorScheme="dark"
+                            theme={theme}
+                        >
                             <Notifications />
                             <ModalsProvider>
                                 <App />
