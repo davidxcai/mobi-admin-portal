@@ -7,11 +7,15 @@ import {
 } from "@tabler/icons-react";
 import { useLogout } from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../providers/AuthProvider";
+import { useQueryClient } from "@tanstack/react-query";
+import { Profile } from "../../types/models";
 
 export function SidebarProfile() {
-  const { profile: user } = useAuth();
-  const name = `${user?.first_name} ${user?.last_name}`;
+  const queryClient = useQueryClient();
+  const profile = queryClient.getQueryData<Profile>(["profile"]);
+
+  if (!profile) return <div>No User</div>;
+  const name = `${profile.first_name} ${profile.last_name}`;
 
   const { mutate: logout } = useLogout();
   const navigate = useNavigate();
@@ -23,7 +27,7 @@ export function SidebarProfile() {
           <Stack gap={0}>
             <Text fw="500">{name}</Text>
             <Text size="xs" c="dimmed">
-              {user?.role === "admin" ? "Admin" : "User"}
+              {profile.role === "admin" ? "Admin" : "User"}
             </Text>
           </Stack>
           <IconChevronRight className="ml-auto" />

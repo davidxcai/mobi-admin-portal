@@ -1,4 +1,5 @@
 import { supabase } from "./supabaseClient";
+import type { Session } from "@supabase/supabase-js";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { notifications } from "@mantine/notifications";
 import { Profile } from "../types/models";
@@ -18,21 +19,21 @@ export function useGetAllProfiles() {
   return getAllProfilesQuery;
 }
 
-export function useGetUserProfile(userId: string) {
-  console.log("Fetching user profile for ID:", userId);
+export function useGetUserProfile(session: Session | null) {
   const getProfileQuery = useQuery({
     queryKey: ["profile"],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("profiles")
         .select("*")
-        .eq("id", userId)
+        .eq("id", session?.user.id)
         .single();
       if (error) {
         throw new Error(error.message);
       }
       return data as Profile;
     },
+    enabled: session !== null,
     refetchOnWindowFocus: false,
   });
   return getProfileQuery;

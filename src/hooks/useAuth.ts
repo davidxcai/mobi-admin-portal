@@ -1,6 +1,5 @@
 import { supabase } from "./supabaseClient";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-// import { useCreateProfile } from "./useProfiles";
 import { notifications } from "@mantine/notifications";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -62,33 +61,49 @@ export function useRegister() {
     return registerMutation;
 }
 
+async function isAuthroized(userId: string): Promise<Profile> {
+    const { data, error } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("id", userId)
+    .single();
+    if (error) throw new Error(error.message);
+    if (!data) {
+        throw new Error("User not found");
+    }
+    return data;
+}
+
 export function useLogin() {
-    const navigate = useNavigate();
     const queryClient = useQueryClient();
+    const navigate = useNavigate();
     const loginMutation = useMutation({
-        mutationFn: async (credentials: {
+        mutationFn: async ({email, password}: {
             email: string;
             password: string;
         }) => {
             const { data, error } = await supabase.auth.signInWithPassword({
-                email: credentials.email,
-                password: credentials.password,
+                email,
+                password,
             });
             if (error) {
                 throw new Error(error.message);
             }
             return data;
         },
-        onSuccess: async (data) => {
-            const { data: profile, error } = await supabase
-                .from("profiles")
-                .select("*")
-                .eq("id", data.user?.id)
-                .single();
-            if (error) {
-                throw new Error(error.message);
+        onSuccess: async ({session}) => {
+            const profile = await isAuthroized(session.user.id);
+            const authorized = profile.role === "admin" || profile.role === "superadmin";
+            if (!authorized) {
+                notifications.show({
+                    title: "Unauthorized",
+                    message: "You are not authorized to access this application.",
+                    color: "red",
+                });
+                return;
             }
-            queryClient.setQueryData(["profile"], profile as Profile);
+            queryClient.setQueryData(["profile"], profile);
+            queryClient.setQueryData(["session"], session);
             navigate("/dashboard");
         },
         onError: (error) => {
@@ -134,13 +149,12 @@ export function useGetSession() {
     const getSessionQuery = useQuery({
         queryKey: ["session"],
         queryFn: async () => {
-            const { data, error } = await supabase.auth.getSession();
+            const { data: { session }, error } = await supabase.auth.getSession();
             if (error) {
                 throw new Error(error.message);
             }
-            return data.session;
+            return session;
         },
-        refetchOnWindowFocus: false,
     });
     return getSessionQuery;
 }

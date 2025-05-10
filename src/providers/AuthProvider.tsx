@@ -1,33 +1,46 @@
-import { createContext, useContext } from "react";
-import { Session } from "@supabase/supabase-js";
-import { Profile } from "../types/models";
-import { useAuthSync } from "../hooks/useAuth";
+import { createContext, useContext, useEffect, useMemo } from "react";
+import type { Session } from "@supabase/supabase-js";
+import { useGetSession } from "../hooks/useAuth";
+import { supabase } from "../hooks/supabaseClient";
+import { useQueryClient } from "@tanstack/react-query";
 
 type AuthContextType = {
   session: Session | null;
-  profile: Profile | null;
+  sessionPending: boolean;
+  isAuthenticated: boolean;
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  // Synchronizes your session with supabase
-  // Updates automatically when the session changes
-  const { session, profile, loading } = useAuthSync();
+  console.count("AuthProvider");
+  const queryClient = useQueryClient();
+  const { data: session, isPending: sessionPending } = useGetSession();
 
-  if (loading) {
-    //Possibly load skeleton
-    return <div>Loading auth...</div>;
-  }
+  useEffect(() => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      queryClient.setQueryData(["session"], session);
+    });
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [queryClient]);
 
-  return (
-    <AuthContext.Provider value={{ session, profile }}>
-      {children}
-    </AuthContext.Provider>
+  const values = useMemo(
+    () => ({
+      session: session ?? null,
+      sessionPending,
+      isAuthenticated: !!session,
+    }),
+    [session, sessionPending]
   );
+
+  return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
 }
 
-export function useAuth() {
+export function useAuthContext() {
   const context = useContext(AuthContext);
   if (!context) {
     throw new Error("useAuth must be used within an AuthProvider");

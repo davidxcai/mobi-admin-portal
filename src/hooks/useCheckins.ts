@@ -72,11 +72,6 @@ export function useCreateCheckIn() {
       return data;
     },
     onSuccess: () => {
-      notifications.show({
-        title: "Check-in successful",
-        message: "You have successfully checked in.",
-        color: "green",
-      });
       queryClient.invalidateQueries({ queryKey: ["checkins"] });
     },
     onError: (error) => {

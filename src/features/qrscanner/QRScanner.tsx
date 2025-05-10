@@ -7,11 +7,11 @@ import { notifications } from "@mantine/notifications";
 import { useCurrentEvent } from "../../context/CurrentEventContext";
 import { useCameraAvailable } from "./QRCameraAvailable";
 import { useCreateCheckIn } from "../../hooks";
-import { useAuth } from "../../providers/AuthProvider";
+import { useAuthContext } from "../../providers/AuthProvider";
 
 export function QRScanner() {
   const { event: currentEvent } = useCurrentEvent();
-  const { session } = useAuth();
+  const { session } = useAuthContext();
   const {
     mutate: createCheckIn,
     isPending,
@@ -126,6 +126,7 @@ export function QRScanner() {
       >
         {scanning ? "Scanning..." : "Scan QR Code"}
       </Button>
+      {isPending && <p>Checking in...</p>}
       {!cameraAvailable && (
         <p className="text-rose-400">No camera detected on this device</p>
       )}
