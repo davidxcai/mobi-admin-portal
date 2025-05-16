@@ -19,10 +19,13 @@ export function useGetAllProfiles() {
   return getAllProfilesQuery;
 }
 
-export function useGetUserProfile(session: Session | null) {
-  const getProfileQuery = useQuery({
+export function useGetUserProfile(session?: Session | null | undefined) {
+  const getProfileQuery = useQuery<Profile | null>({
     queryKey: ["profile"],
     queryFn: async () => {
+      if (!session) {
+        return null;
+      }
       const { data, error } = await supabase
         .from("profiles")
         .select("*")
@@ -31,9 +34,9 @@ export function useGetUserProfile(session: Session | null) {
       if (error) {
         throw new Error(error.message);
       }
-      return data as Profile;
+      return data ?? null;
     },
-    enabled: session !== null,
+    enabled: !!session,
     refetchOnWindowFocus: false,
   });
   return getProfileQuery;

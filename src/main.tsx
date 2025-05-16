@@ -22,36 +22,25 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 const queryClient = new QueryClient();
 
-// Auth Provider
-import { AuthProvider } from "./providers/AuthProvider";
-
 // Render the app
 const rootElement = document.getElementById("root")!;
 if (!rootElement.innerHTML) {
-    const root = ReactDOM.createRoot(rootElement);
-    root.render(
-        <StrictMode>
-            <QueryClientProvider client={queryClient}>
-                <BrowserRouter>
-                    <AuthProvider>
-                        <MantineProvider
-                            defaultColorScheme="dark"
-                            theme={theme}
-                        >
-                            <Notifications />
-                            <ModalsProvider>
-                                <App />
-                            </ModalsProvider>
-                        </MantineProvider>
-                    </AuthProvider>
-                </BrowserRouter>
-                <ReactQueryDevtools
-                    initialIsOpen={false}
-                    buttonPosition="top-right"
-                />
-            </QueryClientProvider>
-        </StrictMode>
-    );
+  const root = ReactDOM.createRoot(rootElement);
+  root.render(
+    <StrictMode>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <MantineProvider defaultColorScheme="dark" theme={theme}>
+            <Notifications />
+            <ModalsProvider>
+              <App />
+            </ModalsProvider>
+          </MantineProvider>
+        </BrowserRouter>
+        <ReactQueryDevtools initialIsOpen={false} buttonPosition="top-right" />
+      </QueryClientProvider>
+    </StrictMode>
+  );
 }
 
 // Guidelines for app structure:

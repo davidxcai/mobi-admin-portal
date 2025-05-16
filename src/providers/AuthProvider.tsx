@@ -1,21 +1,20 @@
-import { createContext, useContext, useEffect, useMemo } from "react";
-import type { Session } from "@supabase/supabase-js";
-import { useGetSession } from "../hooks/useAuth";
+import { useEffect } from "react";
 import { supabase } from "../hooks/supabaseClient";
 import { useQueryClient } from "@tanstack/react-query";
+import { useGetSession } from "../hooks";
+import { createContext, useContext, type ReactNode } from "react";
+import type { Session } from "@supabase/supabase-js";
 
-type AuthContextType = {
-  session: Session | null;
-  sessionPending: boolean;
-  isAuthenticated: boolean;
+const AuthContext = createContext<Session | null | undefined>(undefined);
+
+type AuthProviderProps = {
+  children: ReactNode;
 };
 
-const AuthContext = createContext<AuthContextType | null>(null);
-
-export function AuthProvider({ children }: { children: React.ReactNode }) {
+export function AuthProvider({ children }: AuthProviderProps) {
   console.count("AuthProvider");
   const queryClient = useQueryClient();
-  const { data: session, isPending: sessionPending } = useGetSession();
+  const session = useGetSession();
 
   useEffect(() => {
     const {
@@ -28,22 +27,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
   }, [queryClient]);
 
-  const values = useMemo(
-    () => ({
-      session: session ?? null,
-      sessionPending,
-      isAuthenticated: !!session,
-    }),
-    [session, sessionPending]
-  );
+  if (session.isPending) return <div>Loading session...</div>;
 
-  return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
+  if (session.isError) return <div>Error: {session.error.message}</div>;
+
+  return (
+    <AuthContext.Provider value={session.data}>{children}</AuthContext.Provider>
+  );
 }
 
-export function useAuthContext() {
+export const useAuthContext = () => {
   const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
+  if (context === undefined) {
+    throw new Error("useAuthContext must be used within an AuthProvider");
   }
   return context;
-}
+};

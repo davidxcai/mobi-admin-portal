@@ -2,9 +2,6 @@ import { supabase } from "./supabaseClient";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { notifications } from "@mantine/notifications";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { Profile } from "../types/models";
-import { Session } from "@supabase/supabase-js";
 
 export function useRegister() {
     const navigate = useNavigate();
@@ -61,23 +58,9 @@ export function useRegister() {
     return registerMutation;
 }
 
-async function isAuthroized(userId: string): Promise<Profile> {
-    const { data, error } = await supabase
-    .from("profiles")
-    .select("*")
-    .eq("id", userId)
-    .single();
-    if (error) throw new Error(error.message);
-    if (!data) {
-        throw new Error("User not found");
-    }
-    return data;
-}
-
 export function useLogin() {
     const queryClient = useQueryClient();
-    const navigate = useNavigate();
-    const loginMutation = useMutation({
+    return useMutation({
         mutationFn: async ({email, password}: {
             email: string;
             password: string;
@@ -92,19 +75,8 @@ export function useLogin() {
             return data;
         },
         onSuccess: async ({session}) => {
-            const profile = await isAuthroized(session.user.id);
-            const authorized = profile.role === "admin" || profile.role === "superadmin";
-            if (!authorized) {
-                notifications.show({
-                    title: "Unauthorized",
-                    message: "You are not authorized to access this application.",
-                    color: "red",
-                });
-                return;
-            }
-            queryClient.setQueryData(["profile"], profile);
             queryClient.setQueryData(["session"], session);
-            navigate("/dashboard");
+            console.log("Login successful");
         },
         onError: (error) => {
             console.error("Login error", error);
@@ -115,13 +87,11 @@ export function useLogin() {
             });
         },
     });
-    return loginMutation;
 }
 
 export function useLogout() {
-    const navigate = useNavigate();
     const queryClient = useQueryClient();
-    const logoutMutation = useMutation({
+    return useMutation({
         mutationFn: async () => {
             const { error } = await supabase.auth.signOut();
             if (error) {
@@ -131,7 +101,6 @@ export function useLogout() {
         onSuccess: () => {
             console.log("Logout successful");
             queryClient.clear();
-            navigate("/login");
         },
         onError: (error) => {
             console.error("Logout error", error);
@@ -142,11 +111,11 @@ export function useLogout() {
             });
         },
     });
-    return logoutMutation;
+
 }
 
 export function useGetSession() {
-    const getSessionQuery = useQuery({
+    return useQuery({
         queryKey: ["session"],
         queryFn: async () => {
             const { data: { session }, error } = await supabase.auth.getSession();
@@ -156,11 +125,10 @@ export function useGetSession() {
             return session;
         },
     });
-    return getSessionQuery;
 }
 
 export function useGetUser() {
-    const getSessionQuery = useQuery({
+    return useQuery({
         queryKey: ["user"],
         queryFn: async () => {
             const { data, error } = await supabase.auth.getUser();
@@ -171,45 +139,4 @@ export function useGetUser() {
         },
         refetchOnWindowFocus: false,
     });
-    return getSessionQuery;
-}
-
-export function useAuthSync() {
-    const [session, setSession] = useState<Session | null>(null);
-    const [profile, setProfile] = useState<Profile | null>(null);
-    const [loading, setLoading] = useState<boolean>(true);
-
-    useEffect(() => {
-        supabase.auth.getSession().then(({ data: { session } }) => {
-            setSession(session);
-            setLoading(false);
-        });
-
-        const {
-            data: { subscription },
-        } = supabase.auth.onAuthStateChange(async (_event, session) => {
-            setSession(session);
-            if (_event === "INITIAL_SESSION" && session) {
-                const { data: profileData, error } = await supabase
-                    .from("profiles")
-                    .select("*")
-                    .eq("id", session.user.id)
-                    .single();
-                if (error) {
-                    throw new Error(error.message);
-                }
-                setProfile(profileData);
-            } else if (_event === "SIGNED_IN") {
-                if (session) {
-                    console.log("User signed in", session);
-                }
-            } else if (_event === "SIGNED_OUT") {
-                console.log("User signed out");
-            }
-        });
-
-        return () => subscription.unsubscribe();
-    }, []);
-
-    return { session, profile, loading };
 }

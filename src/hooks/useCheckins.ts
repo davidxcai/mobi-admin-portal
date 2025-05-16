@@ -2,7 +2,7 @@ import { supabase } from "./supabaseClient";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { notifications } from "@mantine/notifications";
 import { CheckInData } from "../types/models";
-import { useCurrentEvent } from "../context/CurrentEventContext";
+import { useCurrentEvent } from "../providers/CurrentEventProvider";
 import { Event } from "../types/models";
 import { User } from "@supabase/supabase-js";
 

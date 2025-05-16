@@ -4,14 +4,14 @@ import { Html5Qrcode } from "html5-qrcode";
 import { Button } from "@mantine/core";
 import { IconCamera } from "@tabler/icons-react";
 import { notifications } from "@mantine/notifications";
-import { useCurrentEvent } from "../../context/CurrentEventContext";
+import { useCurrentEvent } from "../../providers/CurrentEventProvider";
 import { useCameraAvailable } from "./QRCameraAvailable";
 import { useCreateCheckIn } from "../../hooks";
-import { useAuthContext } from "../../providers/AuthProvider";
+import { useGetSession } from "../../hooks/";
 
 export function QRScanner() {
   const { event: currentEvent } = useCurrentEvent();
-  const { session } = useAuthContext();
+  const { data: session } = useGetSession();
   const {
     mutate: createCheckIn,
     isPending,
