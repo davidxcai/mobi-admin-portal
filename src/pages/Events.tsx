@@ -7,8 +7,10 @@ import {
 } from "../features/events";
 import { ModalFormButton, RefreshButton } from "../components/buttons";
 import { IconSearch } from "@tabler/icons-react";
+import { useCurrentEvent } from "../providers/CurrentEventProvider";
 
 export function Events() {
+    const { event } = useCurrentEvent();
     const refreshEvents = () => {
         console.log("Refresh events");
         // replace with hook later
@@ -55,13 +57,15 @@ export function Events() {
                         <CurrentEvent />
                     </Card>
                     {/* <Divider my="md" /> */}
-                    <Card>
-                        <div className="flex justify-between items-center">
-                            <strong className="text-2xl">Check-Ins</strong>
-                            <RefreshButton action={refreshCheckins} />
-                        </div>
-                        <CheckInsTable />
-                    </Card>
+                    {event && (
+                        <Card>
+                            <div className="flex justify-between items-center">
+                                <strong className="text-2xl">Check-Ins</strong>
+                                <RefreshButton action={refreshCheckins} />
+                            </div>
+                            <CheckInsTable />
+                        </Card>
+                    )}
                 </Tabs.Panel>
             </Tabs>
         </Stack>
