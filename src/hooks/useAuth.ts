@@ -1,7 +1,19 @@
 import { supabase } from "./supabaseClient";
+import type { Session } from "@supabase/supabase-js";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { notifications } from "@mantine/notifications";
 import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
+
+interface AppJwtPayload {
+    sub: string;
+    aud: string;
+    role: string;
+    app_metadata?: {
+        admin?: boolean;
+    };
+    [key: string]: any;
+}
 
 export function useRegister() {
     const navigate = useNavigate();
@@ -60,8 +72,12 @@ export function useRegister() {
 
 export function useLogin() {
     const queryClient = useQueryClient();
+    const { mutate: logout } = useLogout();
     return useMutation({
-        mutationFn: async ({email, password}: {
+        mutationFn: async ({
+            email,
+            password,
+        }: {
             email: string;
             password: string;
         }) => {
@@ -74,9 +90,21 @@ export function useLogin() {
             }
             return data;
         },
-        onSuccess: async ({session}) => {
-            queryClient.setQueryData(["session"], session);
-            console.log("Login successful");
+        onSuccess: async ({ session }) => {
+            const isAuthorized = isAdmin(session);
+            if (isAuthorized) {
+                console.log("Login successful");
+                queryClient.setQueryData(["session"], session);
+            } else {
+                console.log("User is not authorized");
+                notifications.show({
+                    title: "Login failed",
+                    message:
+                        "You are not authorized to access this application.",
+                    color: "red",
+                });
+                await logout();
+            }
         },
         onError: (error) => {
             console.error("Login error", error);
@@ -111,14 +139,16 @@ export function useLogout() {
             });
         },
     });
-
 }
 
 export function useGetSession() {
     return useQuery({
         queryKey: ["session"],
         queryFn: async () => {
-            const { data: { session }, error } = await supabase.auth.getSession();
+            const {
+                data: { session },
+                error,
+            } = await supabase.auth.getSession();
             if (error) {
                 throw new Error(error.message);
             }
@@ -139,4 +169,15 @@ export function useGetUser() {
         },
         refetchOnWindowFocus: false,
     });
+}
+
+export function isAdmin(session: Session | null): boolean | null {
+    if (!session?.access_token) return null;
+    try {
+        const decoded = jwtDecode<AppJwtPayload>(session.access_token);
+        return decoded.app_metadata?.admin ?? null;
+    } catch (error) {
+        console.warn("Failed to decode JWT:", error);
+        return null;
+    }
 }
