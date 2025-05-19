@@ -13,7 +13,7 @@ export interface Event {
 
 export interface CheckIn {
     id: string;
-    event_id: string;
+    event_id: number;
     created_at: Date;
     checked_in_by: string;
     profile_id: string;

@@ -91,6 +91,35 @@ export function useUpdateProfile() {
   return updateProfileMutation;
 }
 
+export function useUpdateProfileMomocoins() {
+  const updateProfileMomocoinsMutation = useMutation({
+    mutationFn: async ({
+      profile_id,
+      amount,
+    }: {
+      profile_id: string;
+      amount: number;
+    }) => {
+      console.log("Updating profile momocoins:", profile_id, amount);
+      const { error } = await supabase.rpc("change_momocoins", {
+        profile_id,
+        amount,
+      });
+
+      if (error) {
+        throw new Error(error.message);
+      }
+    },
+    onSuccess: () => {
+      console.log("Profile momocoins updated successfully");
+    },
+    onError: (error) => {
+      console.error("useUpdateProfileMomocoins error:", error);
+    },
+  });
+  return updateProfileMomocoinsMutation;
+}
+
 export function useCreateProfile() {
   const queryClient = useQueryClient();
   const createProfileMutation = useMutation({
@@ -127,11 +156,11 @@ export function useCreateProfile() {
 export function usePromoteToAdmin() {
   const queryClient = useQueryClient();
   const promoteToAdminMutation = useMutation({
-    mutationFn: async (profileId: string) => {
+    mutationFn: async (profile_id: string) => {
       const { error } = await supabase
         .from("profiles")
         .update({ role: "admin" })
-        .eq("id", profileId);
+        .eq("id", profile_id);
       if (error) {
         throw new Error(error.message);
       }
