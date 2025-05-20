@@ -12,14 +12,6 @@ import { QRScannerProvider } from "../features/qrscanner/QRScannerProvider";
 
 export function Events() {
   const { event } = useCurrentEvent();
-  const refreshEvents = () => {
-    console.log("Refresh events");
-    // replace with hook later
-  };
-  const refreshCheckins = () => {
-    console.log("Refresh check-ins");
-    // replace with hook later
-  };
   return (
     <Stack h="100%" gap="md">
       <Title order={1}>Events</Title>
@@ -42,7 +34,7 @@ export function Events() {
                   form={<CreateEventForm />}
                 />
 
-                <RefreshButton action={refreshEvents} />
+                <RefreshButton cache="events" />
               </div>
             </div>
             <TextInput
@@ -64,7 +56,7 @@ export function Events() {
             <Card>
               <div className="flex justify-between items-center">
                 <strong className="text-2xl">Check-Ins</strong>
-                <RefreshButton action={refreshCheckins} />
+                <RefreshButton cache="events" />
               </div>
               <CheckInsTable />
             </Card>

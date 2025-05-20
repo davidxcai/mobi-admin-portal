@@ -117,6 +117,7 @@ export function useDeleteEvent() {
 }
 
 export function useIncrementEventAttendance() {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (eventId: number) => {
       console.log("Incrementing attendance for event:", eventId);
@@ -124,6 +125,9 @@ export function useIncrementEventAttendance() {
       if (error) {
         throw new Error(error.message);
       }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["events"] });
     },
     onError: (error) => {
       console.error("Error updating event attendance:", error);

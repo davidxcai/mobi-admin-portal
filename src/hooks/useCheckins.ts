@@ -73,9 +73,9 @@ export function useCreateCheckIn() {
         },
         onSuccess: (data) => {
             console.log("check in success");
-            queryClient.invalidateQueries({ queryKey: ["checkins"] });
             incrementEventAttendance(data.event_id);
             updateProfileMomocoins({ profile_id: data.profile_id, amount: data.momocoins });
+            queryClient.invalidateQueries({ queryKey: ["checkins"] });
         },
         onError: (error) => {
             console.error("useCreateCheckIn error:", error);

@@ -92,7 +92,8 @@ export function useUpdateProfile() {
 }
 
 export function useUpdateProfileMomocoins() {
-  const updateProfileMomocoinsMutation = useMutation({
+  const queryClient = useQueryClient();
+  return useMutation({
     mutationFn: async ({
       profile_id,
       amount,
@@ -111,13 +112,13 @@ export function useUpdateProfileMomocoins() {
       }
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["profiles"] });
       console.log("Profile momocoins updated successfully");
     },
     onError: (error) => {
       console.error("useUpdateProfileMomocoins error:", error);
     },
   });
-  return updateProfileMomocoinsMutation;
 }
 
 export function useCreateProfile() {
