@@ -72,7 +72,7 @@ export function useCreateCheckIn() {
             return data as unknown as CheckInData;
         },
         onSuccess: (data) => {
-            console.log("check in success:", data);
+            console.log("check in success");
             queryClient.invalidateQueries({ queryKey: ["checkins"] });
             incrementEventAttendance(data.event_id);
             updateProfileMomocoins({ profile_id: data.profile_id, amount: data.momocoins });

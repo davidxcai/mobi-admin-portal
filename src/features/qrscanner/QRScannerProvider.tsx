@@ -54,7 +54,7 @@ export function QRScannerProvider({ children }: { children: React.ReactNode }) {
       event: currentEvent,
       admin: admin,
     };
-    console.log("QR Code scanned:", newCheckIn);
+    console.log("QR Code scanned");
     checkIn.mutate(newCheckIn);
     pauseScanning();
   }

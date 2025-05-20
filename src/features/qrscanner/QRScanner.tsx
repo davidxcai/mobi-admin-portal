@@ -33,12 +33,16 @@ export function QRScanner() {
 
   return (
     <div className="flex flex-col items-center gap-4">
-      <Button onClick={toggleScanning} leftSection={<IconCamera size={24} />}>
-        {scanning ? "Scanning..." : "Scan QR Code"}
+      <Button
+        onClick={toggleScanning}
+        color={scanning ? "red" : "indigo"}
+        leftSection={<IconCamera size={24} />}
+      >
+        {scanning ? "Stop Scanning" : "Scan QR Code"}
       </Button>
       {scanState}
       <StatusMessages />
-      <div className="w-full max-w-xs">
+      <div className="w-full max-w-xs rounded-md">
         <div id={targetElementId} />
       </div>
     </div>

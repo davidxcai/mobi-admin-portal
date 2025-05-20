@@ -24,9 +24,8 @@ export function PendingMessage() {
 export function SuccessMessage() {
   const { resumeScanning, checkIn } = useQRScanner();
   const { event: currentEvent } = useCurrentEvent();
-  console.log(checkIn.data);
-  const attendee = "user";
-  const momocoins = 1;
+  const attendee = checkIn.data?.profile.first_name;
+  const momocoins = checkIn.data?.momocoins;
 
   return (
     <Alert
@@ -40,8 +39,10 @@ export function SuccessMessage() {
       my={20}
     >
       <p>Successfully checked-in to {currentEvent?.title}!</p>
-      <p>Received {momocoins} momocoins.</p>
-      <Button onClick={resumeScanning}>Continue</Button>
+      <p>Received {momocoins ?? null} momocoins.</p>
+      <Button onClick={resumeScanning} color="teal" variant="light" mt="16">
+        Continue
+      </Button>
     </Alert>
   );
 }
@@ -61,7 +62,9 @@ export function ErrorMessage() {
       my={20}
     >
       Error: {checkIn.error?.message}
-      <Button onClick={resumeScanning}>Continue</Button>
+      <Button onClick={resumeScanning} color="red" variant="light" mt="16">
+        Continue
+      </Button>
     </Alert>
   );
 }
