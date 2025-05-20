@@ -7,6 +7,7 @@ import { useState } from "react";
 type QRScannerContextType = {
   checkIn: ReturnType<typeof useCreateCheckIn>;
   scanning: boolean;
+  scannerRef: React.RefObject<Html5Qrcode | null>;
   setScanning: React.Dispatch<React.SetStateAction<boolean>>;
   toggleScanning: () => void;
   stopScanning: () => void;
@@ -77,11 +78,10 @@ export function QRScannerProvider({ children }: { children: React.ReactNode }) {
 
     scannerRef.current
       .stop()
-      .then(() => {
-        return scannerRef.current?.clear();
-      })
+      .then(() => scannerRef.current?.clear())
       .then(() => {
         setScanState(scannerRef.current?.getState());
+        scannerRef.current = null; // Clear the reference to the scanner
         setScanning(false);
       })
       .catch((err) => {
@@ -119,6 +119,7 @@ export function QRScannerProvider({ children }: { children: React.ReactNode }) {
   const values = {
     checkIn,
     scanning,
+    scannerRef,
     setScanning,
     toggleScanning,
     stopScanning,

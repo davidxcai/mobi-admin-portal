@@ -3,15 +3,30 @@ import { IconCamera } from "@tabler/icons-react";
 import { useCameraAvailable } from "./QRCameraAvailable";
 import { useQRScanner } from "./QRScannerProvider";
 import { StatusMessages } from "./StatusMessage";
+import { useEffect } from "react";
 
 // TODO:
 // - Add a loading state while the camera is being accessed
-// - stop scanning when the component unmounts
 
 export function QRScanner() {
   const isCameraAvailable = useCameraAvailable();
-  const { toggleScanning, scanning, targetElementId } = useQRScanner();
+  const {
+    toggleScanning,
+    scanning,
+    targetElementId,
+    stopScanning,
+    scannerRef,
+  } = useQRScanner();
   const scanState = scanStateMessage();
+
+  // Stop scanning when the component unmounts
+  useEffect(() => {
+    return () => {
+      if (scannerRef.current) {
+        stopScanning();
+      }
+    };
+  }, []);
 
   if (!isCameraAvailable)
     return <p className="text-rose-400">No camera detected on this device</p>;
@@ -43,6 +58,6 @@ function scanStateMessage() {
     case 3:
       return <p>Paused</p>;
     default:
-      return <p>Not Initialized</p>;
+      return <p>Loading...</p>;
   }
 }
