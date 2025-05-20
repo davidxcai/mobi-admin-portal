@@ -35,8 +35,10 @@ export function QRScannerProvider({ children }: { children: React.ReactNode }) {
 
   // Local State
   const [scanning, setScanning] = useState(false);
+  const [scanState, setScanState] = useState<
+    Html5QrcodeScannerState | undefined
+  >(undefined);
   const scannerRef = useRef<Html5Qrcode | null>(null);
-  const scanState = scannerRef.current?.getState();
 
   // Target Element ID
   const targetElementId = "qr-reader";
@@ -62,10 +64,12 @@ export function QRScannerProvider({ children }: { children: React.ReactNode }) {
 
   function pauseScanning() {
     scannerRef.current?.pause();
+    setScanState(scannerRef.current?.getState());
   }
 
   function resumeScanning() {
     scannerRef.current?.resume();
+    setScanState(scannerRef.current?.getState());
   }
 
   function stopScanning() {
@@ -77,6 +81,7 @@ export function QRScannerProvider({ children }: { children: React.ReactNode }) {
         return scannerRef.current?.clear();
       })
       .then(() => {
+        setScanState(scannerRef.current?.getState());
         setScanning(false);
       })
       .catch((err) => {
@@ -86,6 +91,7 @@ export function QRScannerProvider({ children }: { children: React.ReactNode }) {
 
   function toggleScanning() {
     setScanning((prev) => !prev);
+    setScanState(scannerRef.current?.getState());
   }
 
   useEffect(() => {
@@ -95,6 +101,9 @@ export function QRScannerProvider({ children }: { children: React.ReactNode }) {
     scannerRef.current = scanner;
     scanner
       .start(cameraConfig, scanConfig, onScanSuccess, onScanFailure)
+      .then(() => {
+        setScanState(scannerRef.current?.getState());
+      })
       .catch((err) => {
         console.error("Failed to start scanner:", err);
         setScanning(false);

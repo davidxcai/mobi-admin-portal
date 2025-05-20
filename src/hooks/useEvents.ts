@@ -118,7 +118,7 @@ export function useDeleteEvent() {
 
 export function useIncrementEventAttendance() {
   return useMutation({
-    mutationFn: async (eventId: string) => {
+    mutationFn: async (eventId: number) => {
       console.log("Incrementing attendance for event:", eventId);
       const { error } = await supabase.rpc("increment_attendance", { event_id: eventId });
       if (error) {
