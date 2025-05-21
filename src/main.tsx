@@ -5,7 +5,7 @@ import { App } from "./App";
 
 // Mantine
 import { MantineProvider } from "@mantine/core";
-import { ModalsProvider } from "@mantine/modals";
+
 import { Notifications } from "@mantine/notifications";
 import "@mantine/core/styles.css";
 import "@mantine/charts/styles.css";
@@ -32,9 +32,7 @@ if (!rootElement.innerHTML) {
         <BrowserRouter>
           <MantineProvider defaultColorScheme="dark" theme={theme}>
             <Notifications />
-            <ModalsProvider>
-              <App />
-            </ModalsProvider>
+            <App />
           </MantineProvider>
         </BrowserRouter>
         <ReactQueryDevtools initialIsOpen={false} buttonPosition="top-right" />

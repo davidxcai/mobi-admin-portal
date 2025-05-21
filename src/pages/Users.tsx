@@ -1,7 +1,12 @@
-import { Card, Tabs, TextInput, Text, Title } from "@mantine/core";
-import { RefreshButton } from "../components/buttons";
-import { UsersTable, PendingUsersTable } from "../features/users/";
-import { IconSearch } from "@tabler/icons-react";
+import { Card, Tabs, Text, Title } from "@mantine/core";
+import { AdminsTable, CurrentUsersTable } from "../features/users/";
+import { UsersProvider } from "../features/users/UsersProvider";
+
+// TODO:
+// create button to delete user in users table
+// implement promote/demote admin hooks
+// implement delete user hook
+// update policies in supabase
 
 export function Users() {
   return (
@@ -10,32 +15,24 @@ export function Users() {
       <Text c="dimmed" size="sm">
         Manage and view all MOBI organization members.
       </Text>
-      <Tabs defaultValue="users">
-        <Tabs.List className="mb-4">
-          <Tabs.Tab value="users">Current Users</Tabs.Tab>
-          <Tabs.Tab value="pending">Pending</Tabs.Tab>
-        </Tabs.List>
-        <Tabs.Panel value="users">
-          <Card>
-            <div className="flex items-center justify-between mb-4">
-              <strong>2 Members</strong>
-
-              <RefreshButton cache="users" />
-            </div>
-            <TextInput
-              leftSection={<IconSearch size={16} />}
-              placeholder="Search members..."
-              my="md"
-            />
-            <UsersTable />
-          </Card>
-        </Tabs.Panel>
-        <Tabs.Panel value="pending">
-          <Card>
-            <PendingUsersTable />
-          </Card>
-        </Tabs.Panel>
-      </Tabs>
+      <UsersProvider>
+        <Tabs defaultValue="users">
+          <Tabs.List className="mb-4">
+            <Tabs.Tab value="users">Current Users</Tabs.Tab>
+            <Tabs.Tab value="admins">Admins</Tabs.Tab>
+          </Tabs.List>
+          <Tabs.Panel value="users">
+            <Card>
+              <CurrentUsersTable />
+            </Card>
+          </Tabs.Panel>
+          <Tabs.Panel value="admins">
+            <Card>
+              <AdminsTable />
+            </Card>
+          </Tabs.Panel>
+        </Tabs>
+      </UsersProvider>
     </div>
   );
 }

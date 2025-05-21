@@ -62,7 +62,7 @@ export function useGetAllPendingProfiles() {
 
 export function useUpdateProfile() {
   const queryClient = useQueryClient();
-  const updateProfileMutation = useMutation({
+  return useMutation({
     mutationFn: async (profile: Profile) => {
       const { error } = await supabase
         .from("profiles")
@@ -73,10 +73,10 @@ export function useUpdateProfile() {
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["profile"] });
+      queryClient.invalidateQueries({ queryKey: ["profiles"] });
       notifications.show({
         title: "Profile updated",
-        message: "Your profile has been updated successfully.",
+        message: "Profile has been updated successfully.",
         color: "green",
       });
     },
@@ -88,7 +88,6 @@ export function useUpdateProfile() {
       });
     },
   });
-  return updateProfileMutation;
 }
 
 export function useUpdateProfileMomocoins() {
