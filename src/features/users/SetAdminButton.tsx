@@ -2,7 +2,8 @@ import { modals } from "@mantine/modals";
 import { Button, TextInput } from "@mantine/core";
 import type { Profile } from "../../types/models";
 import { useProfileContext } from "../../providers/ProfileProvider";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { usePromoteAdmin, useDemoteAdmin } from "../../hooks/useAdmin";
 
 export function SetAdminButton({ user }: { user: Profile }) {
   const isAdmin = user.is_admin;
@@ -28,6 +29,7 @@ export function SetAdminButton({ user }: { user: Profile }) {
 }
 
 function PromoteAdminForm({ user }: { user: Profile }) {
+  const promoteAdmin = usePromoteAdmin();
   const admin = useProfileContext();
   const adminName = `${admin.first_name} ${admin.last_name}`;
   const userName = `${user.first_name} ${user.last_name}`;
@@ -42,12 +44,17 @@ function PromoteAdminForm({ user }: { user: Profile }) {
   const handleSubmit = (event: any) => {
     event.preventDefault();
     if (isValid) {
-      console.log(`Promoting ${userName} to admin`);
-      modals.closeAll();
+      promoteAdmin.mutate(user);
     } else {
       console.error("Invalid name");
     }
   };
+
+  useEffect(() => {
+    if (promoteAdmin.isSuccess) {
+      modals.closeAll();
+    }
+  }, [promoteAdmin.isSuccess]);
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -66,6 +73,7 @@ function PromoteAdminForm({ user }: { user: Profile }) {
 }
 
 function DemoteAdminForm({ user }: { user: Profile }) {
+  const demoteAdmin = useDemoteAdmin();
   const admin = useProfileContext();
   const adminName = `${admin.first_name} ${admin.last_name}`;
   const userName = `${user.first_name} ${user.last_name}`;
@@ -81,11 +89,18 @@ function DemoteAdminForm({ user }: { user: Profile }) {
     event.preventDefault();
     if (isValid) {
       console.log(`Demoting ${userName} to user`);
-      modals.closeAll();
+      demoteAdmin.mutate(user);
     } else {
       console.error("Invalid name");
     }
   };
+
+  useEffect(() => {
+    if (demoteAdmin.isSuccess) {
+      modals.closeAll();
+    }
+  }, [demoteAdmin.isSuccess]);
+
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <p>You are about to demote {userName} to user status.</p>
