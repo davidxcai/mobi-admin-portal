@@ -9,6 +9,7 @@ import { useProfileContext } from "../providers/ProfileProvider";
 // imoplement promote to super admin
 // implement delete user button inside modal (requires confirmation)
 // fix hover state for action buttons
+// implment audit log for user actions (especially momocoin transactions)
 
 export function Users() {
   const admin = useProfileContext();
