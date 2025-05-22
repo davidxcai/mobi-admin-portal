@@ -12,7 +12,13 @@ export function useGetAllProfiles() {
       if (error) {
         throw new Error(error.message);
       }
-      return (data as Profile[]) || [];
+      const profiles = data.map((profile) => {
+        return {
+          ...profile,
+          created_at: new Date(profile.created_at),
+        };
+      })
+      return (profiles as Profile[]) || [];
     },
     refetchOnWindowFocus: false,
   });

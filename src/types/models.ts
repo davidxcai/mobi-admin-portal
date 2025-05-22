@@ -1,6 +1,6 @@
 export interface Event {
     id: string;
-    created_at: string;
+    created_at: Date;
     created_by: string;
     title: string;
     location: string;

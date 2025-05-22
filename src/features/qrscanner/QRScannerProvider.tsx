@@ -30,7 +30,7 @@ const scanConfig: any = {
 
 export function QRScannerProvider({ children }: { children: React.ReactNode }) {
   // Custom Hooks
-  const { event: currentEvent } = useCurrentEvent();
+  const { currentEvent } = useCurrentEvent();
   const { data: admin } = useGetUser();
   const checkIn = useCreateCheckIn();
 
