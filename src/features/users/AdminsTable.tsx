@@ -4,7 +4,7 @@ import type { Profile } from "../../types/models";
 import { EditUserButton } from "./EditUserButton";
 
 function checkIsAdmin(user: Profile) {
-  return user.is_admin;
+  return user.role === "admin" || user.role === "super_admin";
 }
 
 export function AdminsTable() {

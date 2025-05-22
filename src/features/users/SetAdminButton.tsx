@@ -6,7 +6,8 @@ import { useState, useEffect } from "react";
 import { usePromoteAdmin, useDemoteAdmin } from "../../hooks/useAdmin";
 
 export function SetAdminButton({ user }: { user: Profile }) {
-  const isAdmin = user.is_admin;
+  const isAdmin = user.role === "admin";
+  const isSuperAdmin = user.role === "super_admin";
   const openModal = () => {
     modals.open({
       title: "Promote to Admin",
@@ -21,9 +22,10 @@ export function SetAdminButton({ user }: { user: Profile }) {
       ),
     });
   };
+  if (isSuperAdmin) return null;
   return (
     <Button onClick={openModal} size="xs">
-      {isAdmin ? "Demote from Admin" : "Promote to Admin"}
+      {isAdmin ? "Demote" : "Promote"}
     </Button>
   );
 }

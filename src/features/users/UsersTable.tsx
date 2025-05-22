@@ -3,15 +3,11 @@ import { useUserProfiles } from "./UsersProvider";
 import { useProfileContext } from "../../providers/ProfileProvider";
 import { EditUserButton } from "./EditUserButton";
 import { SetAdminButton } from "./SetAdminButton";
-import { useGetAdmins } from "../../hooks/useAdmin";
 
 export function UsersTable() {
-  const { data: admins } = useGetAdmins();
   const admin = useProfileContext();
   const users = useUserProfiles();
   const isSuperAdmin = admin.role === "super_admin";
-
-  console.log("admins:", admins);
 
   if (!users) {
     return <div>No users found</div>;

@@ -1,5 +1,5 @@
 import { supabase } from "./supabaseClient";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { notifications } from "@mantine/notifications";
 import type { Profile } from "../types/models";
 
@@ -17,7 +17,8 @@ export function usePromoteAdmin() {
             return user;
         },
         onSuccess: (user) => {
-            queryClient.invalidateQueries({ queryKey: ["profiles", "profile"] });
+            queryClient.invalidateQueries({ queryKey: ["profiles"] });
+            queryClient.invalidateQueries({ queryKey: ["profile"] });
             console.log(`${user.first_name} successfully promoted to admin`);
             notifications.show({
                 title: "Success",
@@ -50,7 +51,8 @@ export function useDemoteAdmin() {
             return user;
         },
         onSuccess: (user) => {
-            queryClient.invalidateQueries({ queryKey: ["profiles", "profile"] });
+            queryClient.invalidateQueries({ queryKey: ["profiles"] });
+            queryClient.invalidateQueries({ queryKey: ["profile"] });
             console.log(`${user.first_name} successfully demoted to user`);
             notifications.show({
                 title: "Success",
@@ -83,7 +85,8 @@ export function usePromoteSuperAdmin() {
             return user;
         },
         onSuccess: (user) => {
-            queryClient.invalidateQueries({ queryKey: ["profiles", "profile"] });
+            queryClient.invalidateQueries({ queryKey: ["profiles"] });
+            queryClient.invalidateQueries({ queryKey: ["profile"] });
             console.log(`${user.first_name} successfully promoted to super admin`);
             notifications.show({
                 title: "Success",
@@ -116,7 +119,8 @@ export function useDemoteSuperAdmin() {
             return user;
         },
         onSuccess: (user) => {
-            queryClient.invalidateQueries({ queryKey: ["profiles", "profile"] });
+            queryClient.invalidateQueries({ queryKey: ["profiles"] });
+            queryClient.invalidateQueries({ queryKey: ["profile"] });
             console.log(`${user.first_name} successfully demoted to admin`);
             notifications.show({
                 title: "Success",
@@ -132,21 +136,5 @@ export function useDemoteSuperAdmin() {
                 color: "red",
             });
         }
-    })
-}
-
-export function useGetAdmins() {
-    return useQuery({
-        queryKey: ["admins"],
-        queryFn: async () => {
-            const { data, error } = await supabase
-                .from("admins")
-                .select("*")
-            if (error) {
-                throw new Error(error.message);
-            }
-            return data;
-        },
-        refetchOnWindowFocus: false,
     })
 }
