@@ -4,23 +4,63 @@ import { notifications } from "@mantine/notifications";
 import { Event } from "../types/models";
 
 export function useGetAllEvents() {
-  const getAllEventsQuery = useQuery<Event[], Error>({
+  return useQuery<Event[], Error>({
     queryKey: ["events"],
     queryFn: async () => {
       const { data, error } = await supabase.from("events").select("*");
       if (error) {
         throw new Error(error.message);
       }
-      return (data as Event[]) || [];
+      const events = data.map((event) => {
+        return {
+          ...event,
+          created_at: new Date(event.created_at),
+          starts_at: new Date(event.starts_at),
+          ends_at: new Date(event.ends_at),
+        };
+      })
+      return (events as Event[]) || [];
     },
     refetchOnWindowFocus: false,
   });
-  return getAllEventsQuery;
+}
+
+export function useGetCurrentSemesterEvents() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth(); // 0-indexed: Jan = 0, Jul = 6
+
+  const semesterStart = month < 6
+    ? new Date(`${year}-01-01`)
+    : new Date(`${year}-07-01`);
+
+  return useQuery<Event[], Error>({
+    queryKey: ["events"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+      .from("events")
+      .select("*")
+      .gte("created_at", semesterStart.toISOString());
+      if (error) {
+        throw new Error(error.message);
+      }
+      const events = data.map((event) => {
+        return {
+          ...event,
+          created_at: new Date(event.created_at),
+          starts_at: new Date(event.starts_at),
+          ends_at: new Date(event.ends_at),
+        };
+      })
+      return (events as Event[]) || [];
+    },
+    refetchOnWindowFocus: false,
+  });
 }
 
 export function useCreateEvent() {
   const queryClient = useQueryClient();
-  const createEventMutation = useMutation({
+  return useMutation({
     mutationFn: async (event: Partial<Event>) => {
       const { data, error } = await supabase
         .from("events")
@@ -48,12 +88,11 @@ export function useCreateEvent() {
       });
     },
   });
-  return createEventMutation;
 }
 
 export function useUpdateEvent() {
   const queryClient = useQueryClient();
-  const updateEventMutation = useMutation({
+  return useMutation({
     mutationFn: async (event: Event) => {
       const { data, error } = await supabase
         .from("events")
@@ -82,26 +121,26 @@ export function useUpdateEvent() {
       });
     },
   });
-  return updateEventMutation;
 }
 
 export function useDeleteEvent() {
   const queryClient = useQueryClient();
-  const deleteEventMutation = useMutation({
-    mutationFn: async (eventId: string) => {
+  return useMutation({
+    mutationFn: async (event: Event) => {
       const { error } = await supabase
         .from("events")
         .delete()
-        .eq("id", eventId);
+        .eq("id", event.id);
       if (error) {
         throw new Error(error.message);
       }
+      return event;
     },
-    onSuccess: () => {
+    onSuccess: (event) => {
       notifications.show({
         title: "Event deleted",
-        message: "Event deleted successfully",
-        color: "green",
+        message: `Event: ${event.title} deleted successfully`,
+        color: "teal",
       });
       queryClient.invalidateQueries({ queryKey: ["events"] });
     },
@@ -113,7 +152,6 @@ export function useDeleteEvent() {
       });
     },
   });
-  return deleteEventMutation;
 }
 
 export function useIncrementEventAttendance() {
@@ -128,6 +166,8 @@ export function useIncrementEventAttendance() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["events"] });
+      queryClient.invalidateQueries({ queryKey: ["currentEvent"] });
+      console.log("Attendance incremented successfully");
     },
     onError: (error) => {
       console.error("Error updating event attendance:", error);

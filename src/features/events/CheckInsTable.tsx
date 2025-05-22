@@ -1,5 +1,6 @@
 import { Table, Button } from "@mantine/core";
 import { useGetEventCheckIns } from "../../hooks/";
+import { formatTime } from "../../utils/date";
 
 export function CheckInsTable() {
   const { data: checkins, isPending, isError, error } = useGetEventCheckIns();
@@ -21,7 +22,7 @@ export function CheckInsTable() {
       <Table.Td>
         {checkin.profile.first_name} {checkin.profile.last_name}
       </Table.Td>
-      <Table.Td>{checkin.created_at.toString()}</Table.Td>
+      <Table.Td>{formatTime(checkin.created_at)}</Table.Td>
       <Table.Td>{checkin.momocoins}</Table.Td>
       <Table.Td>
         {checkin.checked_in_by_profile.first_name}{" "}

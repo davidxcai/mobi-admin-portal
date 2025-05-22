@@ -28,7 +28,6 @@ export function Navbar({ opened, toggle }: NavbarProps) {
       <AppShell.Navbar>
         <Sidebar />
       </AppShell.Navbar>
-      ;
     </>
   );
 }

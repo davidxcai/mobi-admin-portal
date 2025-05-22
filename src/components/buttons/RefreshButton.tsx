@@ -5,6 +5,7 @@ import { useQueryClient } from "@tanstack/react-query";
 export function RefreshButton({ cache }: { cache: string }) {
   const queryClient = useQueryClient();
   const refresh = () => {
+    console.log("Refreshing cache", cache);
     queryClient.invalidateQueries({ queryKey: [cache] });
   };
   return (

@@ -7,7 +7,7 @@ import { Event } from "../types/models";
 import { User } from "@supabase/supabase-js";
 
 export function useGetEventCheckIns() {
-    const { event } = useCurrentEvent();
+    const { currentEvent } = useCurrentEvent();
     const allRows = `
         *,
         profile:profile_id(*),
@@ -15,19 +15,25 @@ export function useGetEventCheckIns() {
     `;
 
     return useQuery({
-        queryKey: ["checkins", event?.id],
+        queryKey: ["checkins", currentEvent?.id],
         queryFn: async () => {
             const { data, error } = await supabase
                 .from("checkins")
                 .select(allRows)
-                .eq("event_id", event?.id)
+                .eq("event_id", currentEvent?.id)
                 .order("created_at", { ascending: false });
             if (error) {
                 throw new Error(error.message);
             }
-            return data as CheckInData[];
+            const checkins = data.map((checkin) => {
+                return {
+                    ...checkin,
+                    created_at: new Date(checkin.created_at),
+                }
+            })
+            return checkins as CheckInData[];
         },
-        enabled: !!event,
+        enabled: !!currentEvent,
         refetchOnWindowFocus: false,
     });
 }

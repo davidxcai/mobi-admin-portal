@@ -1,27 +1,23 @@
-import { Card, Tabs, TextInput, Title, Text, Stack } from "@mantine/core";
-import {
-  EventsTable,
-  CheckInsTable,
-  CurrentEvent,
-  CreateEventForm,
-} from "../features/events";
-import { ModalFormButton, RefreshButton } from "../components/buttons";
-import { IconSearch } from "@tabler/icons-react";
+import { Card, Group, Tabs, Title, Text, Stack } from "@mantine/core";
+import { EventsTable, CheckInsTable, CurrentEvent } from "../features/events";
 import { useCurrentEvent } from "../providers/CurrentEventProvider";
 import { QRScannerProvider } from "../features/qrscanner/QRScannerProvider";
+import { RefreshButton } from "../components/buttons";
 
 // TODO:
-// format dates for rows and info
-// add current event to cache from provider
 // implement search function
-// implement filter function
+// implement filter row function
+// implement filter column function
+
 // implement edit event button
 // implement delete event button
+// implement update/edit checkin button
 // implement edit button for check-ins
 // implement refresh for check-ins
 
+
 export function Events() {
-  const { event } = useCurrentEvent();
+  const { currentEvent } = useCurrentEvent();
   return (
     <Stack h="100%" gap="md">
       <Title order={1}>Events</Title>
@@ -35,34 +31,16 @@ export function Events() {
         </Tabs.List>
         <Tabs.Panel value="events">
           <Card>
-            <div className="flex justify-between items-center">
-              <Title order={3}>2 Events</Title>
-
-              <div className="flex gap-4">
-                <ModalFormButton
-                  title="Create Event"
-                  form={<CreateEventForm />}
-                />
-
-                <RefreshButton cache="events" />
-              </div>
-            </div>
-            <TextInput
-              leftSection={<IconSearch size={16} />}
-              placeholder="Search events..."
-              my="md"
-            />
             <EventsTable />
           </Card>
         </Tabs.Panel>
         <Tabs.Panel value="checkins">
-          <Card mb="lg">
-            <QRScannerProvider>
+          <QRScannerProvider>
+            <Group>
               <CurrentEvent />
-            </QRScannerProvider>
-          </Card>
-          {/* <Divider my="md" /> */}
-          {event && (
+            </Group>
+          </QRScannerProvider>
+          {currentEvent && (
             <Card>
               <div className="flex justify-between items-center">
                 <strong className="text-2xl">Check-Ins</strong>

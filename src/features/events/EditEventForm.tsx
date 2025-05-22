@@ -1,36 +1,38 @@
 import { useForm, isNotEmpty } from "@mantine/form";
-import { TextInput, NumberInput, Button } from "@mantine/core";
+import { Button, TextInput, NumberInput } from "@mantine/core";
 import { DateTimePicker } from "@mantine/dates";
 import { modals } from "@mantine/modals";
-import { useCreateEvent } from "../../hooks/useEvents";
-import { useGetUser } from "../../hooks/useAuth";
+import { useUpdateEvent } from "../../hooks";
+import type { Event } from "../../types/models";
 import { useEffect } from "react";
 
-export function CreateEventForm() {
-  const { mutate: createEvent, isPending, isSuccess } = useCreateEvent();
-  const { data: user } = useGetUser();
+export function EditEventForm({ event }: { event: Event }) {
+  const { mutate: updateEvent, isPending, isSuccess } = useUpdateEvent();
   const form = useForm({
     initialValues: {
-      title: "",
-      location: "",
-      starts_at: new Date(),
-      ends_at: new Date(),
-      momocoins: 1,
+      title: event.title,
+      location: event.location,
+      starts_at: event.starts_at,
+      ends_at: event.ends_at,
+      momocoins: event.momocoins,
     },
-
     validate: {
       title: isNotEmpty("Title is required"),
+      location: isNotEmpty("Location is required"),
+      starts_at: isNotEmpty("Start date is required"),
+      ends_at: isNotEmpty("End date is required"),
+      momocoins: isNotEmpty("Momocoins are required"),
     },
   });
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    const newEvent = {
+    if (form.validate().hasErrors) return;
+    const updatedEvent = {
+      ...event,
       ...form.getValues(),
-      created_by: user?.id || "Unknown User",
     };
-    createEvent(newEvent);
-    modals.closeAll();
+    updateEvent(updatedEvent);
   };
 
   useEffect(() => {
@@ -72,7 +74,7 @@ export function CreateEventForm() {
           loading={isPending}
           loaderProps={{ type: "dots" }}
         >
-          Create
+          Update Event
         </Button>
       </div>
     </form>
