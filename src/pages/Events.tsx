@@ -10,6 +10,14 @@ import { IconSearch } from "@tabler/icons-react";
 import { useCurrentEvent } from "../providers/CurrentEventProvider";
 import { QRScannerProvider } from "../features/qrscanner/QRScannerProvider";
 
+// TODO:
+// format dates for rows and info
+// add current event to cache from provider
+// implement search function
+// implement filter function
+// implement edit event button
+// implement delete event button
+
 export function Events() {
   const { event } = useCurrentEvent();
   return (

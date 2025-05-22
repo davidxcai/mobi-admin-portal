@@ -1,5 +1,5 @@
 import { Button } from "@mantine/core";
-import { IconCamera } from "@tabler/icons-react";
+import { IconQrcode } from "@tabler/icons-react";
 import { useCameraAvailable } from "./QRCameraAvailable";
 import { useQRScanner } from "./QRScannerProvider";
 import { StatusMessages } from "./StatusMessage";
@@ -36,7 +36,7 @@ export function QRScanner() {
       <Button
         onClick={toggleScanning}
         color={scanning ? "red" : "indigo"}
-        leftSection={<IconCamera size={24} />}
+        leftSection={<IconQrcode size={24} />}
       >
         {scanning ? "Stop Scanning" : "Scan QR Code"}
       </Button>
