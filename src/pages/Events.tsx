@@ -17,6 +17,8 @@ import { QRScannerProvider } from "../features/qrscanner/QRScannerProvider";
 // implement filter function
 // implement edit event button
 // implement delete event button
+// implement edit button for check-ins
+// implement refresh for check-ins
 
 export function Events() {
   const { event } = useCurrentEvent();
