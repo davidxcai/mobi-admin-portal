@@ -15,7 +15,7 @@ export function SetCurrentEventButton({ event }: { event: Event }) {
       variant={isCurrentEvent ? "filled" : "transparent"}
       onClick={() => setCurrentEvent(event)}
     >
-      <IconPin size={16} />
+      <IconPin size={20} />
     </ActionIcon>
   );
 }
@@ -33,7 +33,7 @@ export function EditEventButton({ event }: { event: Event }) {
   };
   return (
     <ActionIcon size="sm" variant="transparent" onClick={openModal}>
-      <IconEdit size={16} />
+      <IconEdit size={20} />
     </ActionIcon>
   );
 }
@@ -65,7 +65,7 @@ export function DeleteEventButton({ event }: { event: Event }) {
   };
   return (
     <ActionIcon size="sm" variant="transparent" color="red" onClick={openModal}>
-      <IconTrash size={16} />
+      <IconTrash size={20} />
     </ActionIcon>
   );
 }

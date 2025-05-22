@@ -1,4 +1,4 @@
-import { Card, Tabs, Title, Text, Stack } from "@mantine/core";
+import { Card, Group, Tabs, Title, Text, Stack } from "@mantine/core";
 import { EventsTable, CheckInsTable, CurrentEvent } from "../features/events";
 import { useCurrentEvent } from "../providers/CurrentEventProvider";
 import { QRScannerProvider } from "../features/qrscanner/QRScannerProvider";
@@ -32,12 +32,11 @@ export function Events() {
           </Card>
         </Tabs.Panel>
         <Tabs.Panel value="checkins">
-          <Card mb="lg">
-            <QRScannerProvider>
+          <QRScannerProvider>
+            <Group>
               <CurrentEvent />
-            </QRScannerProvider>
-          </Card>
-          {/* <Divider my="md" /> */}
+            </Group>
+          </QRScannerProvider>
           {currentEvent && (
             <Card>
               <div className="flex justify-between items-center">

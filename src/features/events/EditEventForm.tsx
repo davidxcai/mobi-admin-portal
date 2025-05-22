@@ -42,7 +42,7 @@ export function EditEventForm({ event }: { event: Event }) {
   }, [isSuccess]);
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <TextInput
         label="Event Title"
         placeholder="Enter event title"
@@ -68,7 +68,7 @@ export function EditEventForm({ event }: { event: Event }) {
         placeholder="Enter number of momocoins"
         {...form.getInputProps("momocoins")}
       />
-      <div>
+      <div className="flex justify-end">
         <Button
           type="submit"
           loading={isPending}

@@ -4,7 +4,7 @@ import { IconCircleCheck } from "@tabler/icons-react";
 import { useCurrentEvent } from "../../providers/CurrentEventProvider";
 
 export function PendingMessage() {
-  const { event: currentEvent } = useCurrentEvent();
+  const { currentEvent } = useCurrentEvent();
   return (
     <Alert
       variant="light"
@@ -23,7 +23,7 @@ export function PendingMessage() {
 
 export function SuccessMessage() {
   const { resumeScanning, checkIn } = useQRScanner();
-  const { event: currentEvent } = useCurrentEvent();
+  const { currentEvent } = useCurrentEvent();
   const attendee = checkIn.data?.profile.first_name;
   const momocoins = checkIn.data?.momocoins;
 
@@ -49,7 +49,7 @@ export function SuccessMessage() {
 
 export function ErrorMessage() {
   const { resumeScanning, checkIn } = useQRScanner();
-  const { event: currentEvent } = useCurrentEvent();
+  const { currentEvent } = useCurrentEvent();
   return (
     <Alert
       variant="light"

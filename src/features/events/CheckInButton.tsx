@@ -22,8 +22,8 @@ export function CheckInButton() {
       <Button
         color="blue"
         onClick={open}
-        size="compact-sm"
-        leftSection={<IconUserScan size={14} />}
+        size="sm"
+        leftSection={<IconUserScan size={20} />}
       >
         Check-In
       </Button>

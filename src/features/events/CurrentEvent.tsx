@@ -1,4 +1,13 @@
-import { Button, Flex, Group, Stack, Title, Text } from "@mantine/core";
+import {
+  Button,
+  Card,
+  Divider,
+  Flex,
+  Group,
+  Stack,
+  Title,
+  Text,
+} from "@mantine/core";
 import { CheckInButton } from "./CheckInButton";
 import {
   IconEdit,
@@ -6,8 +15,10 @@ import {
   IconClock,
   IconMapPin,
   IconUsers,
+  IconPin,
 } from "@tabler/icons-react";
 import { useCurrentEvent } from "../../providers/CurrentEventProvider";
+import { useMediaQuery } from "@mantine/hooks";
 import type { Event } from "../../types/models";
 import { formatDate, formatTime, formatWeekDay } from "../../utils/date";
 
@@ -18,41 +29,44 @@ export function CurrentEvent() {
   }
   console.log("CurrentEvent", currentEvent.attendance);
   return (
-    <div className="flex flex-col h-full gap-4">
+    <Card mb="lg" className="flex flex-col h-full gap-4 grow">
       <Flex justify="space-between">
         <Stack>
-          <Title order={3}>{currentEvent.title}</Title>
+          <Group>
+            <IconPin />
+            <Title order={3}>{currentEvent.title}</Title>
+          </Group>
           <Text size="sm" c="dimmed">
             Current active event details and attendance
           </Text>
         </Stack>
-        <Buttons setCurrentEvent={() => setCurrentEvent(null)} />
       </Flex>
       <EventDetails {...currentEvent} />
-    </div>
+      <Divider />
+      <Buttons setCurrentEvent={() => setCurrentEvent(null)} />
+    </Card>
   );
 }
 
 function Buttons({ setCurrentEvent }: { setCurrentEvent: () => void }) {
+  const isMobile = useMediaQuery("(max-width: 768px)");
+  const flexDirection = isMobile ? "flex-col" : "flex-row";
   return (
-    <Flex gap="md">
+    <div className={`flex ${flexDirection} gap-4`}>
       <CheckInButton />
-      <Button
-        size="compact-sm"
-        variant="outline"
-        leftSection={<IconEdit size={14} />}
-      >
+      <Button size="sm" variant="outline" leftSection={<IconEdit size={20} />}>
         Update
       </Button>
       <Button
-        size="compact-sm"
+        size="sm"
         variant="outline"
         color="red"
         onClick={setCurrentEvent}
+        leftSection={<IconPin size={20} />}
       >
-        Remove
+        Unpin
       </Button>
-    </Flex>
+    </div>
   );
 }
 
