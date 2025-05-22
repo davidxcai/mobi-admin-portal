@@ -12,6 +12,9 @@ import { RefreshButton } from "../components/buttons";
 // implement edit event button
 // implement delete event button
 // implement update/edit checkin button
+// implement edit button for check-ins
+// implement refresh for check-ins
+
 
 export function Events() {
   const { currentEvent } = useCurrentEvent();
