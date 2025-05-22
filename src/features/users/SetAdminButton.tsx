@@ -1,9 +1,10 @@
 import { modals } from "@mantine/modals";
-import { Button, TextInput } from "@mantine/core";
+import { ActionIcon, Button, TextInput } from "@mantine/core";
 import type { Profile } from "../../types/models";
 import { useProfileContext } from "../../providers/ProfileProvider";
 import { useState, useEffect } from "react";
 import { usePromoteAdmin, useDemoteAdmin } from "../../hooks/useAdmin";
+import { IconUserUp, IconUserDown } from "@tabler/icons-react";
 
 export function SetAdminButton({ user }: { user: Profile }) {
   const isAdmin = user.role === "admin";
@@ -24,9 +25,14 @@ export function SetAdminButton({ user }: { user: Profile }) {
   };
   if (isSuperAdmin) return null;
   return (
-    <Button onClick={openModal} size="xs">
-      {isAdmin ? "Demote" : "Promote"}
-    </Button>
+    <ActionIcon
+      onClick={openModal}
+      size="sm"
+      variant="outline"
+      color={isAdmin ? "red" : "blue"}
+    >
+      {isAdmin ? <IconUserDown size={16} /> : <IconUserUp size={16} />}
+    </ActionIcon>
   );
 }
 

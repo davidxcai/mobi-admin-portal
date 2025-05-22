@@ -4,10 +4,11 @@ import { UsersProvider } from "../features/users/UsersProvider";
 import { useProfileContext } from "../providers/ProfileProvider";
 
 // TODO:
-// create button to delete user in users table
-// implement promote/demote admin hooks
-// implement delete user hook
-// update policies in supabase
+// implement search function for user table
+// implement filter function for user table
+// imoplement promote to super admin
+// implement delete user button inside modal (requires confirmation)
+// fix hover state for action buttons
 
 export function Users() {
   const admin = useProfileContext();

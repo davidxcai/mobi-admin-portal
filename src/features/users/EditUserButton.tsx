@@ -1,9 +1,16 @@
-import { Button, NumberInput, Select, TextInput } from "@mantine/core";
+import {
+  ActionIcon,
+  Button,
+  NumberInput,
+  Select,
+  TextInput,
+} from "@mantine/core";
 import { useForm, isNotEmpty } from "@mantine/form";
 import { modals } from "@mantine/modals";
 import type { Profile } from "../../types/models";
 import { useUpdateProfile } from "../../hooks";
 import { useEffect } from "react";
+import { IconEdit } from "@tabler/icons-react";
 
 export function EditUserButton({ user }: { user: Profile }) {
   const openModal = () => {
@@ -17,9 +24,9 @@ export function EditUserButton({ user }: { user: Profile }) {
     });
   };
   return (
-    <Button onClick={openModal} size="xs">
-      Edit
-    </Button>
+    <ActionIcon onClick={openModal} variant="outline" size="sm">
+      <IconEdit size={16} />
+    </ActionIcon>
   );
 }
 
