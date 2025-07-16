@@ -1,5 +1,5 @@
 import { useForm, isNotEmpty } from "@mantine/form";
-import { Button, Divider, TextInput, NumberInput } from "@mantine/core";
+import { Button, TextInput, NumberInput } from "@mantine/core";
 import { DateTimePicker } from "@mantine/dates";
 import { modals } from "@mantine/modals";
 import { useUpdateEvent } from "../../hooks";
