@@ -9,6 +9,7 @@ export interface Event {
     starts_at: Date;
     ends_at: Date;
     semester: string;
+    profiles: Profile;
 }
 
 export interface CheckIn {

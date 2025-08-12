@@ -1,4 +1,4 @@
-import { ActionIcon } from "@mantine/core";
+import { Menu } from "@mantine/core";
 import { IconPin, IconEdit, IconTrash } from "@tabler/icons-react";
 import { useCurrentEvent } from "../../providers/CurrentEventProvider";
 import type { Event } from "../../types/models";
@@ -6,17 +6,40 @@ import { modals } from "@mantine/modals";
 import { useDeleteEvent } from "../../hooks/useEvents";
 import { EditEventForm } from "./EditEventForm";
 
+export function EventRowMenu({
+    children,
+    event,
+}: {
+    children: React.ReactNode;
+    event: Event;
+}) {
+    return (
+        <Menu shadow="md" width={200} withArrow position="bottom" offset={-10}>
+            <Menu.Target>{children}</Menu.Target>
+
+            <Menu.Dropdown>
+                <Menu.Label>{event.title}</Menu.Label>
+                <SetCurrentEventButton event={event} />
+                <EditEventButton event={event} />
+                <Menu.Divider />
+
+                <Menu.Label>Danger zone</Menu.Label>
+                <DeleteEventButton event={event} />
+            </Menu.Dropdown>
+        </Menu>
+    );
+}
+
 export function SetCurrentEventButton({ event }: { event: Event }) {
     const { currentEvent, setCurrentEvent } = useCurrentEvent();
     const isCurrentEvent = currentEvent?.id === event.id;
     return (
-        <ActionIcon
-            size="sm"
-            variant={isCurrentEvent ? "filled" : "transparent"}
-            onClick={() => setCurrentEvent(event)}
+        <Menu.Item
+            leftSection={<IconPin size={14} />}
+            onClick={() => setCurrentEvent(isCurrentEvent ? null : event)}
         >
-            <IconPin size={20} />
-        </ActionIcon>
+            {isCurrentEvent ? "Remove current event" : "Set as Current Event"}
+        </Menu.Item>
     );
 }
 
@@ -32,9 +55,9 @@ export function EditEventButton({ event }: { event: Event }) {
         });
     };
     return (
-        <ActionIcon size="sm" variant="transparent" onClick={openModal}>
-            <IconEdit size={20} />
-        </ActionIcon>
+        <Menu.Item leftSection={<IconEdit size={14} />} onClick={openModal}>
+            Edit
+        </Menu.Item>
     );
 }
 
@@ -64,13 +87,12 @@ export function DeleteEventButton({ event }: { event: Event }) {
         });
     };
     return (
-        <ActionIcon
-            size="sm"
-            variant="transparent"
+        <Menu.Item
             color="red"
+            leftSection={<IconTrash size={14} />}
             onClick={openModal}
         >
-            <IconTrash size={20} />
-        </ActionIcon>
+            Delete Event
+        </Menu.Item>
     );
 }
