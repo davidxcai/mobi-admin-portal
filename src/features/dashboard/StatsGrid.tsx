@@ -6,14 +6,7 @@ import {
     IconHeart,
     IconUserPlus,
 } from "@tabler/icons-react";
-import {
-    Group,
-    Paper,
-    SimpleGrid,
-    Text,
-    Title,
-    NumberFormatter,
-} from "@mantine/core";
+import { Group, Paper, SimpleGrid, Text, Title } from "@mantine/core";
 import classes from "./StatsGrid.module.css";
 import type { Profile, CheckInData } from "../../types/models";
 import { CalculateDashboardMetrics } from "../../utils/data";
