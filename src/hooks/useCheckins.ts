@@ -1,10 +1,19 @@
 import { supabase } from "./supabaseClient";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useUpdateProfileMomocoins, useIncrementEventAttendance } from "./index";
+import {
+    useUpdateProfileMomocoins,
+    useIncrementEventAttendance,
+} from "./index";
 import { CheckInData } from "../types/models";
 import { useCurrentEvent } from "../providers/CurrentEventProvider";
 import { Event } from "../types/models";
 import { User } from "@supabase/supabase-js";
+
+type createCheckInType = {
+    attendee: string;
+    event: Event;
+    admin: User;
+};
 
 export function useGetEventCheckIns() {
     const { currentEvent } = useCurrentEvent();
@@ -29,19 +38,35 @@ export function useGetEventCheckIns() {
                 return {
                     ...checkin,
                     created_at: new Date(checkin.created_at),
-                }
-            })
+                };
+            });
             return checkins as CheckInData[];
         },
         enabled: !!currentEvent,
         refetchOnWindowFocus: false,
+        retry: 2,
+        initialData: [],
     });
 }
 
-type createCheckInType = {
-    attendee: string;
-    event: Event;
-    admin: User;
+export function useGetAllCheckIns() {
+    return useQuery({
+        queryKey: ["checkins"],
+        queryFn: async () => {
+            const { data, error } = await supabase.from("checkins").select(`
+                    *,
+                    profile:profile_id(*),
+                    event:event_id(*),
+                    admin:checked_in_by(*)
+                `);
+            if (error) {
+                throw new Error(error.message);
+            }
+            return data as CheckInData[];
+        },
+        retry: 2,
+        initialData: [],
+    });
 }
 
 export function useCreateCheckIn() {
@@ -56,21 +81,17 @@ export function useCreateCheckIn() {
     `;
 
     return useMutation({
-        mutationFn: async ({
-            attendee,
-            event,
-            admin,
-        }: createCheckInType) => {
+        mutationFn: async ({ attendee, event, admin }: createCheckInType) => {
             const { data, error } = await supabase
-            .from("checkins")
-            .insert({
-                event_id: event.id,
-                profile_id: attendee,
-                momocoins: event?.momocoins ?? 0,
-                checked_in_by: admin?.id,
-            })
-            .select(returnData)
-            .single();
+                .from("checkins")
+                .insert({
+                    event_id: event.id,
+                    profile_id: attendee,
+                    momocoins: event?.momocoins ?? 0,
+                    checked_in_by: admin?.id,
+                })
+                .select(returnData)
+                .single();
             if (error) {
                 console.error("useCreateCheckIn error:", error);
                 throw new Error(error.message);
@@ -80,7 +101,10 @@ export function useCreateCheckIn() {
         onSuccess: (data) => {
             console.log("check in success");
             incrementEventAttendance(data.event_id);
-            updateProfileMomocoins({ profile_id: data.profile_id, amount: data.momocoins });
+            updateProfileMomocoins({
+                profile_id: data.profile_id,
+                amount: data.momocoins,
+            });
             queryClient.invalidateQueries({ queryKey: ["checkins"] });
         },
         onError: (error) => {

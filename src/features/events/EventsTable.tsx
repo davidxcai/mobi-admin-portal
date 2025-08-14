@@ -7,10 +7,13 @@ import { IconSearch } from "@tabler/icons-react";
 import { EventRowMenu } from "./EventRowMenu";
 
 function EventsTableHeader({ eventCount }: { eventCount: number }) {
+    const onlyOneEvent = eventCount === 1;
     return (
         <>
             <div className="flex justify-between items-center">
-                <Title order={3}>{eventCount} Events</Title>
+                <Title order={3}>
+                    {eventCount} {onlyOneEvent ? "Event" : "Events"}
+                </Title>
 
                 <div className="flex gap-4">
                     <ModalFormButton
