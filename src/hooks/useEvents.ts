@@ -2,7 +2,6 @@ import { supabase } from "./supabaseClient";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { notifications } from "@mantine/notifications";
 import { Event } from "../types/models";
-import type { User } from "@supabase/supabase-js";
 
 export function useGetAllEvents() {
     return useQuery<Event[], Error>({
