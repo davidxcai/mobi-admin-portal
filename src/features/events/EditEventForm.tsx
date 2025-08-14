@@ -9,8 +9,9 @@ import { formatDate, formatTime } from "../../utils/date";
 
 export function EditEventForm({ event }: { event: Event }) {
     const { mutate: updateEvent, isPending, isSuccess } = useUpdateEvent();
-    const createdBy =
-        event.profiles.first_name + " " + event.profiles.last_name;
+    const createdBy = event.profiles
+        ? event.profiles.first_name + " " + event.profiles.last_name
+        : "Unknown";
     const form = useForm({
         initialValues: {
             title: event.title,
@@ -30,6 +31,7 @@ export function EditEventForm({ event }: { event: Event }) {
 
     const handleSubmit = (e: any) => {
         e.preventDefault();
+
         if (form.validate().hasErrors) return;
         const updatedEvent = {
             ...event,

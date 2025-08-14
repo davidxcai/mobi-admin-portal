@@ -2,6 +2,7 @@ import { supabase } from "./supabaseClient";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { notifications } from "@mantine/notifications";
 import { Event } from "../types/models";
+import type { User } from "@supabase/supabase-js";
 
 export function useGetAllEvents() {
     return useQuery<Event[], Error>({
@@ -97,9 +98,13 @@ export function useUpdateEvent() {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: async (event: Event) => {
+            const { profiles, ...rest } = event;
+            // Remove the profiles from the event
+            // profiles column does not exist in events table
+            console.log("Updating event mutation:", rest);
             const { data, error } = await supabase
                 .from("events")
-                .update(event)
+                .update(rest)
                 .eq("id", event.id)
                 .select()
                 .single();
@@ -117,6 +122,7 @@ export function useUpdateEvent() {
             queryClient.invalidateQueries({ queryKey: ["events"] });
         },
         onError: (error) => {
+            console.error(error);
             notifications.show({
                 title: "Error updating event",
                 message: error.message,
