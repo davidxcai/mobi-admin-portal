@@ -3,6 +3,7 @@ import {
     useContext,
     useEffect,
     useState,
+    useRef,
     ReactNode,
 } from "react";
 import { Event } from "../types/models";
@@ -24,6 +25,8 @@ export function CurrentEventProvider({ children }: { children: ReactNode }) {
 
     // Detemines if there's an event to fetch from the database
     const [event, setEvent] = useState<Event | null>(null);
+    const previousEventRef = useRef<Event | null>(null);
+
     const { data: currentEvent } = useQuery<Event | null>({
         queryKey: ["currentEvent"],
         queryFn: async () => {
@@ -63,13 +66,14 @@ export function CurrentEventProvider({ children }: { children: ReactNode }) {
                 message: `Current Event: ${event.title}`,
                 color: "green",
             });
-        } else {
+        } else if (previousEventRef.current && !event) {
             notifications.show({
                 title: "Event cleared",
                 message: "No current event selected.",
                 color: "blue",
             });
         }
+        previousEventRef.current = event;
     }, [event]);
 
     return (

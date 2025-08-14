@@ -1,10 +1,9 @@
-import { Card, Tabs, Text, Title } from "@mantine/core";
+import { Card, SegmentedControl, Stack, Text, Title } from "@mantine/core";
 import { OverviewChart } from "../components/OverviewChart";
-import { EventsTable } from "../features/events/EventsTable";
-import { IconPhoto, IconMessageCircle } from "@tabler/icons-react";
 import { StatsGrid } from "../features/dashboard/StatsGrid";
-
+import { useGetAllProfiles, useGetAllCheckIns } from "../hooks";
 import { formattedDate } from "../utils/date";
+import { useState } from "react";
 
 // TODO:
 // connect data to backend
@@ -15,38 +14,57 @@ import { formattedDate } from "../utils/date";
 // limit upcoming events to 5
 
 export function Dashboard() {
-  return (
-    <div className="flex flex-col h-full gap-4">
-      <Title order={1}>{formattedDate()}</Title>
-      <Text c="dimmed" size="sm">
-        Dashboard overview of MOBI organization metrics and upcoming events.
-      </Text>
-      <StatsGrid />
-      <Card>
-        <Tabs defaultValue="gallery">
-          <Tabs.List mb="lg">
-            <Tabs.Tab value="gallery" leftSection={<IconPhoto size={12} />}>
-              Attendance
-            </Tabs.Tab>
-            <Tabs.Tab
-              value="messages"
-              leftSection={<IconMessageCircle size={12} />}
-            >
-              Member Growth
-            </Tabs.Tab>
-          </Tabs.List>
-          <Tabs.Panel value="gallery">
-            <OverviewChart />
-          </Tabs.Panel>
+    const { data: profiles, isPending: isLoadingProfiles } =
+        useGetAllProfiles();
+    const { data: eventCheckIns, isPending: isLoadingCheckIns } =
+        useGetAllCheckIns();
+    console.log("dashboard profiles", profiles);
+    console.log("dashboard eventCheckIns", eventCheckIns);
 
-          <Tabs.Panel value="messages">Messages tab content</Tabs.Panel>
-        </Tabs>
-      </Card>
+    const [currentTab, setCurrentTab] = useState("overview");
 
-      <Card>
-        <strong className="text-2xl">Upcoming Events</strong>
-        <EventsTable />
-      </Card>
-    </div>
-  );
+    return (
+        <Stack>
+            <Title order={1}>{formattedDate()}</Title>
+            <Text c="dimmed" size="sm">
+                Dashboard overview of MOBI organization metrics and upcoming
+                events.
+            </Text>
+            {isLoadingProfiles || isLoadingCheckIns ? (
+                <Text>Loading monthly metrics...</Text>
+            ) : (
+                <StatsGrid
+                    profiles={profiles ?? []}
+                    checkins={eventCheckIns ?? []}
+                />
+            )}
+            <Card>
+                <div>
+                    <SegmentedControl
+                        value={currentTab}
+                        onChange={setCurrentTab}
+                        data={[
+                            { value: "overview", label: "Overview" },
+                            { value: "new_members", label: "New Members" },
+                            { value: "total_members", label: "Total Members" },
+                            { value: "attendance", label: "Attendance" },
+                        ]}
+                        withItemsBorders={false}
+                        mb="xl"
+                    />
+                </div>
+                {currentTab === "overview" && (
+                    <OverviewChart
+                        profiles={profiles ?? []}
+                        checkins={eventCheckIns ?? []}
+                    />
+                )}
+            </Card>
+
+            {/* <Card>
+                <strong className="text-2xl">Upcoming Events</strong>
+                <EventsTable />
+            </Card> */}
+        </Stack>
+    );
 }

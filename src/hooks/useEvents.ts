@@ -97,9 +97,12 @@ export function useUpdateEvent() {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: async (event: Event) => {
+            const { profiles, ...rest } = event;
+            // Remove the profiles from the event
+            // profiles column does not exist in events table
             const { data, error } = await supabase
                 .from("events")
-                .update(event)
+                .update(rest)
                 .eq("id", event.id)
                 .select()
                 .single();
@@ -117,6 +120,7 @@ export function useUpdateEvent() {
             queryClient.invalidateQueries({ queryKey: ["events"] });
         },
         onError: (error) => {
+            console.error(error);
             notifications.show({
                 title: "Error updating event",
                 message: error.message,
