@@ -101,7 +101,6 @@ export function useUpdateEvent() {
             const { profiles, ...rest } = event;
             // Remove the profiles from the event
             // profiles column does not exist in events table
-            console.log("Updating event mutation:", rest);
             const { data, error } = await supabase
                 .from("events")
                 .update(rest)
