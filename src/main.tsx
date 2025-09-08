@@ -1,17 +1,21 @@
+// React
 import { StrictMode } from "react"; // For development (will render components twice)
 import ReactDOM from "react-dom/client";
 import { App } from "./App";
 
 // Mantine
 import { MantineProvider } from "@mantine/core";
-import { ModalsProvider } from "@mantine/modals";
+
 import { Notifications } from "@mantine/notifications";
 import "@mantine/core/styles.css";
 import "@mantine/charts/styles.css";
+import "@mantine/dates/styles.css";
 import "@mantine/notifications/styles.css";
+import { theme } from "./theme/AppTheme";
 
 // React Router
 import { BrowserRouter } from "react-router-dom";
+import "./styles.css";
 
 // TanStack Query
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -21,22 +25,23 @@ const queryClient = new QueryClient();
 // Render the app
 const rootElement = document.getElementById("root")!;
 if (!rootElement.innerHTML) {
-  const root = ReactDOM.createRoot(rootElement);
-  root.render(
-    <StrictMode>
-      <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <MantineProvider defaultColorScheme="dark">
-            <Notifications />
-            <ModalsProvider>
-              <App />
-            </ModalsProvider>
-          </MantineProvider>
-        </BrowserRouter>
-        <ReactQueryDevtools initialIsOpen={false} buttonPosition="top-right" />
-      </QueryClientProvider>
-    </StrictMode>
-  );
+    const root = ReactDOM.createRoot(rootElement);
+    root.render(
+        <StrictMode>
+            <QueryClientProvider client={queryClient}>
+                <BrowserRouter>
+                    <MantineProvider defaultColorScheme="dark" theme={theme}>
+                        <Notifications />
+                        <App />
+                    </MantineProvider>
+                </BrowserRouter>
+                <ReactQueryDevtools
+                    initialIsOpen={false}
+                    buttonPosition="top-right"
+                />
+            </QueryClientProvider>
+        </StrictMode>
+    );
 }
 
 // Guidelines for app structure:

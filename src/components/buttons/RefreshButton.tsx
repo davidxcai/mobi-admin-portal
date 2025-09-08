@@ -1,17 +1,19 @@
 import { IconRefresh } from "@tabler/icons-react";
 import { Button } from "@mantine/core";
+import { useQueryClient } from "@tanstack/react-query";
 
-type RefreshButtonProps = {
-  action: () => void;
-};
-
-export function RefreshButton({ action }: RefreshButtonProps) {
+export function RefreshButton({ cache }: { cache: string }) {
+  const queryClient = useQueryClient();
+  const refresh = () => {
+    console.log("Refreshing cache", cache);
+    queryClient.invalidateQueries({ queryKey: [cache] });
+  };
   return (
     <Button
       size="compact-sm"
       variant="outline"
       leftSection={<IconRefresh size={14} />}
-      onClick={action}
+      onClick={refresh}
     >
       Refresh
     </Button>

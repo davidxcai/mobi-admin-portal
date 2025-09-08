@@ -1,6 +1,6 @@
 import { Button, Drawer } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconCreditCardPay } from "@tabler/icons-react";
+import { IconUserScan } from "@tabler/icons-react";
 import { QRScanner } from "../qrscanner/QRScanner";
 
 export function CheckInButton() {
@@ -16,13 +16,14 @@ export function CheckInButton() {
         position="bottom"
       >
         <h1 className="text-3xl text-center pb-4 font-bold">Check-In</h1>
+
         <QRScanner />
       </Drawer>
       <Button
         color="blue"
         onClick={open}
-        size="compact-sm"
-        leftSection={<IconCreditCardPay size={14} />}
+        size="sm"
+        leftSection={<IconUserScan size={20} />}
       >
         Check-In
       </Button>

@@ -4,9 +4,10 @@ import { DateTimePicker } from "@mantine/dates";
 import { modals } from "@mantine/modals";
 import { useCreateEvent } from "../../hooks/useEvents";
 import { useGetUser } from "../../hooks/useAuth";
+import { useEffect } from "react";
 
 export function CreateEventForm() {
-  const { mutate: createEvent } = useCreateEvent();
+  const { mutate: createEvent, isPending, isSuccess } = useCreateEvent();
   const { data: user } = useGetUser();
   const form = useForm({
     initialValues: {
@@ -32,8 +33,14 @@ export function CreateEventForm() {
     modals.closeAll();
   };
 
+  useEffect(() => {
+    if (isSuccess) {
+      modals.closeAll();
+    }
+  }, [isSuccess]);
+
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <TextInput
         label="Event Title"
         placeholder="Enter event title"
@@ -59,8 +66,14 @@ export function CreateEventForm() {
         placeholder="Enter number of momocoins"
         {...form.getInputProps("momocoins")}
       />
-      <div>
-        <Button type="submit">Create</Button>
+      <div className="flex justify-end">
+        <Button
+          type="submit"
+          loading={isPending}
+          loaderProps={{ type: "dots" }}
+        >
+          Create
+        </Button>
       </div>
     </form>
   );

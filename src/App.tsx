@@ -1,12 +1,10 @@
-import { CurrentEventProvider } from "./context/CurrentEventContext";
-import { AuthProvider } from "./providers/AuthProvider";
-import { AppShell, Burger, Group } from "@mantine/core";
-import { MobiText } from "./components/MobiText";
 import { MobiLogo } from "./components/MobiLogo";
-import { useDisclosure } from "@mantine/hooks";
-import { Sidebar } from "./features/navbar/Sidebar";
 import { Dashboard, Events, Users, Profile, Settings } from "./pages/";
-import { Routes, Route, Outlet } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
+import { ProtectedRoutes } from "./providers/ProtectedRoutes";
+import { AuthRoutes } from "./providers/AuthRoutes";
+
+import { AuthProvider } from "./providers/AuthProvider";
 
 export function App() {
     const [opened, { toggle }] = useDisclosure();

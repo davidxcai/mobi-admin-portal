@@ -1,114 +1,71 @@
-// QRScannerHtml5.tsx
-import { useEffect, useRef, useState } from "react";
-import { Html5Qrcode } from "html5-qrcode";
 import { Button } from "@mantine/core";
-import { IconCamera } from "@tabler/icons-react";
-import { notifications } from "@mantine/notifications";
-import { useCurrentEvent } from "../../context/CurrentEventContext";
+import { IconQrcode } from "@tabler/icons-react";
+import { useCameraAvailable } from "./QRCameraAvailable";
+import { useQRScanner } from "./QRScannerProvider";
+import { StatusMessages } from "./StatusMessage";
+import { useEffect } from "react";
+
+// TODO:
+// - Add a loading state while the camera is being accessed
 
 export function QRScanner() {
-  const { event: currentEvent } = useCurrentEvent();
-  const [cameraAvailable, setCameraAvailable] = useState(false);
-  const [scanning, setScanning] = useState(false);
-  const scannerRef = useRef<Html5Qrcode | null>(null);
-  const qrRegionId = "qr-reader";
+    const isCameraAvailable = useCameraAvailable();
+    const {
+        toggleScanning,
+        scanning,
+        targetElementId,
+        stopScanning,
+        scannerRef,
+    } = useQRScanner();
+    const scanState = scanStateMessage();
 
-  useEffect(() => {
-    async function checkCamera() {
-      const available = await hasCamera();
-      setCameraAvailable(available);
-    }
-
-    checkCamera();
-  }, []);
-
-  async function hasCamera(): Promise<boolean> {
-    if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
-      return false;
-    }
-    const devices = await navigator.mediaDevices.enumerateDevices();
-    return devices.some((device) => device.kind === "videoinput");
-  }
-
-  useEffect(() => {
-    if (scanning) {
-      const qrScanner = new Html5Qrcode(qrRegionId);
-      scannerRef.current = qrScanner;
-
-      qrScanner
-        .start(
-          { facingMode: "environment" }, // Rear camera
-          {
-            fps: 10, // Captures per second
-            qrbox: { width: 250, height: 250 }, // Size of the scanning box
-            aspectRatio: 1.0,
-            experimentalFeatures: {
-              useBarCodeDetectorIfSupported: true, // Modern devices: uses built-in fast scanner
-            },
-            showScanRegion: true,
-          } as any,
-          async (userID) => {
-            // Success callback
-
-            // Trigger haptic feedback if available
-            if (navigator.vibrate) {
-              navigator.vibrate(200);
+    // Stop scanning when the component unmounts
+    useEffect(() => {
+        return () => {
+            if (scannerRef.current) {
+                stopScanning();
             }
+        };
+    }, []);
 
-            // Show success notification
-            notifications.show({
-              title: "QR Code Scanned!",
-              message: `Checked ${userID} into ${currentEvent?.title}`,
-              color: "green",
-              autoClose: 3000,
-            });
+    if (!isCameraAvailable)
+        return (
+            <p className="text-rose-400 text-center">
+                No camera detected on this device
+            </p>
+        );
 
-            // Stop scanning after a successful scan
-            try {
-              await qrScanner.stop();
-            } catch (err) {
-              console.error("Error stopping scanner:", err);
-            } finally {
-              setScanning(false);
-              scannerRef.current = null;
-            }
-          },
-          (errorMessage) => {
-            console.warn(errorMessage);
-          }
-        )
-        .catch((err) => {
-          console.error(err);
-          alert("Failed to start QR scanner.");
-          setScanning(false);
-        });
+    return (
+        <div className="flex flex-col items-center gap-4">
+            <Button
+                onClick={toggleScanning}
+                color={scanning ? "red" : "indigo"}
+                leftSection={<IconQrcode size={24} />}
+            >
+                {scanning ? "Stop Scanning" : "Scan QR Code"}
+            </Button>
+            {scanState}
+            <StatusMessages />
+            <div className="w-full max-w-xs rounded-md">
+                <div id={targetElementId} />
+            </div>
+        </div>
+    );
+}
+
+function scanStateMessage() {
+    const { scanState } = useQRScanner();
+
+    switch (scanState) {
+        case 0:
+            return <p>Scan State Unknown</p>;
+        case 1:
+            return <p>Not Scanning</p>;
+        case 2:
+            return <p>Scanning</p>;
+        case 3:
+            return <p>Paused</p>;
+        default:
+            return <p>Loading...</p>;
     }
-
-    return () => {
-      if (scannerRef.current) {
-        scannerRef.current
-          .stop()
-          .catch((err) => console.error("Stop failed", err))
-          .finally(() => {
-            scannerRef.current = null;
-          });
-      }
-    };
-  }, [scanning]);
-
-  return (
-    <div className="flex flex-col items-center gap-4">
-      <Button
-        onClick={() => setScanning(true)}
-        disabled={scanning || !cameraAvailable}
-        leftSection={<IconCamera size={24} />}
-      >
-        {scanning ? "Scanning..." : "Scan QR Code"}
-      </Button>
-      {!cameraAvailable && (
-        <p className="text-rose-400">No camera detected on this device</p>
-      )}
-      {scanning && <div id={qrRegionId} className="w-full max-w-xs" />}
-    </div>
-  );
 }

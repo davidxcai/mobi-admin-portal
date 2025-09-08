@@ -1,45 +1,54 @@
-import { Tabs, Divider, Stack } from "@mantine/core";
-import { EventsTable, CurrentEvent, CreateEventForm } from "../features/events";
-import { ModalFormButton, RefreshButton } from "../components/buttons";
+import { Card, Group, Tabs, Title, Text, Stack } from "@mantine/core";
+import { EventsTable, CheckInsTable, CurrentEvent } from "../features/events";
+import { useCurrentEvent } from "../providers/CurrentEventProvider";
+import { QRScannerProvider } from "../features/qrscanner/QRScannerProvider";
+import { RefreshButton } from "../components/buttons";
+
+// TODO:
+// implement search function
+// implement filter row function
+// implement filter column function
+
+// implement edit event button
+// implement delete event button
+// implement update/edit checkin button
+// implement edit button for check-ins
+// implement refresh for check-ins
+
 
 export function Events() {
-  const refreshEvents = () => {
-    console.log("Refresh events");
-    // replace with hook later
-  };
-  const refreshCheckins = () => {
-    console.log("Refresh check-ins");
-    // replace with hook later
-  };
+  const { currentEvent } = useCurrentEvent();
   return (
     <Stack h="100%" gap="md">
-      <strong className="text-3xl">Events</strong>
+      <Title order={1}>Events</Title>
+      <Text c="dimmed" size="sm">
+        Manage and track all MOBI organization events.
+      </Text>
       <Tabs defaultValue="events">
         <Tabs.List className="mb-4">
           <Tabs.Tab value="events">Events</Tabs.Tab>
           <Tabs.Tab value="checkins">Check-Ins</Tabs.Tab>
         </Tabs.List>
         <Tabs.Panel value="events">
-          <div className="flex justify-between items-center">
-            <strong className="text-2xl">Spring 2025</strong>
-            <div className="flex gap-4">
-              <ModalFormButton
-                title="Create Event"
-                form={<CreateEventForm />}
-              />
-              <RefreshButton action={refreshEvents} />
-            </div>
-          </div>
-          <EventsTable />
+          <Card>
+            <EventsTable />
+          </Card>
         </Tabs.Panel>
         <Tabs.Panel value="checkins">
-          <CurrentEvent />
-          <Divider my="md" />
-          <div className="flex justify-between items-center">
-            <strong className="text-2xl">Check-Ins</strong>
-            <RefreshButton action={refreshCheckins} />
-          </div>
-          <EventsTable />
+          <QRScannerProvider>
+            <Group>
+              <CurrentEvent />
+            </Group>
+          </QRScannerProvider>
+          {currentEvent && (
+            <Card>
+              <div className="flex justify-between items-center">
+                <strong className="text-2xl">Check-Ins</strong>
+                <RefreshButton cache="events" />
+              </div>
+              <CheckInsTable />
+            </Card>
+          )}
         </Tabs.Panel>
       </Tabs>
     </Stack>

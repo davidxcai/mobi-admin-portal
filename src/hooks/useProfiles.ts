@@ -1,8 +1,8 @@
 import { supabase } from "./supabaseClient";
+import type { Session } from "@supabase/supabase-js";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { notifications } from "@mantine/notifications";
 import { Profile } from "../types/models";
-import { useGetUser } from "./useAuth";
 
 export function useGetAllProfiles() {
   const getAllProfilesQuery = useQuery({
@@ -12,28 +12,37 @@ export function useGetAllProfiles() {
       if (error) {
         throw new Error(error.message);
       }
-      return (data as Profile[]) || [];
+      const profiles = data.map((profile) => {
+        return {
+          ...profile,
+          created_at: new Date(profile.created_at),
+        };
+      })
+      return (profiles as Profile[]) || [];
     },
     refetchOnWindowFocus: false,
   });
   return getAllProfilesQuery;
 }
 
-export function useGetUserProfile() {
-  const { data: user } = useGetUser();
-  const getProfileQuery = useQuery({
+export function useGetUserProfile(session?: Session | null | undefined) {
+  const getProfileQuery = useQuery<Profile | null>({
     queryKey: ["profile"],
     queryFn: async () => {
+      if (!session) {
+        return null;
+      }
       const { data, error } = await supabase
         .from("profiles")
         .select("*")
-        .eq("id", user?.id)
+        .eq("id", session?.user.id)
         .single();
       if (error) {
         throw new Error(error.message);
       }
-      return data as Profile;
+      return data ?? null;
     },
+    enabled: !!session,
     refetchOnWindowFocus: false,
   });
   return getProfileQuery;
@@ -46,7 +55,7 @@ export function useGetAllPendingProfiles() {
       const { data, error } = await supabase
         .from("profiles")
         .select("*")
-        .eq("status", "pending");
+        .eq("account_status", "pending");
       if (error) {
         throw new Error(error.message);
       }
@@ -59,7 +68,7 @@ export function useGetAllPendingProfiles() {
 
 export function useUpdateProfile() {
   const queryClient = useQueryClient();
-  const updateProfileMutation = useMutation({
+  return useMutation({
     mutationFn: async (profile: Profile) => {
       const { error } = await supabase
         .from("profiles")
@@ -70,10 +79,10 @@ export function useUpdateProfile() {
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["profile"] });
+      queryClient.invalidateQueries({ queryKey: ["profiles"] });
       notifications.show({
         title: "Profile updated",
-        message: "Your profile has been updated successfully.",
+        message: "Profile has been updated successfully.",
         color: "green",
       });
     },
@@ -85,7 +94,36 @@ export function useUpdateProfile() {
       });
     },
   });
-  return updateProfileMutation;
+}
+
+export function useUpdateProfileMomocoins() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      profile_id,
+      amount,
+    }: {
+      profile_id: string;
+      amount: number;
+    }) => {
+      console.log("Updating profile momocoins:", profile_id, amount);
+      const { error } = await supabase.rpc("change_momocoins", {
+        profile_id,
+        amount,
+      });
+
+      if (error) {
+        throw new Error(error.message);
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["profiles"] });
+      console.log("Profile momocoins updated successfully");
+    },
+    onError: (error) => {
+      console.error("useUpdateProfileMomocoins error:", error);
+    },
+  });
 }
 
 export function useCreateProfile() {
@@ -124,11 +162,11 @@ export function useCreateProfile() {
 export function usePromoteToAdmin() {
   const queryClient = useQueryClient();
   const promoteToAdminMutation = useMutation({
-    mutationFn: async (profileId: string) => {
+    mutationFn: async (profile_id: string) => {
       const { error } = await supabase
         .from("profiles")
         .update({ role: "admin" })
-        .eq("id", profileId);
+        .eq("id", profile_id);
       if (error) {
         throw new Error(error.message);
       }

@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
-import { LoginForm } from "../../forms/LoginForm";
-import { RegisterForm } from "../../forms/RegisterForm";
+import { LoginForm } from "../../../forms/LoginForm";
+import { RegisterForm } from "../../../forms/RegisterForm";
 import Navlinks from "./Navlinks";
 
 export function Sidebar() {
